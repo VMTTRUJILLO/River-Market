@@ -13,3 +13,14 @@
 
 body { background: var(--rm-cream); color: var(--rm-ink); }
 .title, .subtitle { font-family: 'Fredoka', sans-serif; }
+
+.rm-hero,
+.rm-body { position: relative; overflow: hidden; }
+
+/* actores: centrados en el hero; GSAP los mueve desde ahí */
+.rm-abs { position: absolute; top: 50%; left: 50%; pointer-events: none; }
+.carrito { font-size: clamp(5rem, 14vw, 10rem); line-height: 1; }
+.producto { font-size: clamp(2rem, 6vw, 4rem); line-height: 1; }
+
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.btn-saltar { position: absolute; right: 1rem; bottom: 1rem; z-index: 5; }
