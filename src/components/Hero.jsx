@@ -51,7 +51,7 @@ function Hero() {
   )
 
   return (
-    <section ref={contenedor} className="hero is-primary is-fullheight-with-navbar rm-hero">
+    <section ref={contenedor} className="hero is-primary is-fullheight rm-hero">
       <div className="hero-body rm-body">
         <div className="flash"></div>
 
