@@ -13,13 +13,15 @@ function Hero() {
   useGSAP(
     () => {
       
+       const navbar = document.querySelector('.rm-navbar')
       gsap.set('.carrito, .producto', { xPercent: -50, yPercent: -50 })
       gsap.set('.carrito-izq', { x: '-60vw', scaleX: -1 })
       gsap.set('.carrito-der', { x: '60vw'})
       gsap.set('.producto', { opacity: 0 })
       gsap.set('.aparece', { opacity: 0, y: 30 })
 
-      
+      if (navbar) gsap.set(navbar, { backgroundColor: '#0e7c7c' })
+        
       const tl = gsap.timeline()
       tlRef.current = tl
 
@@ -46,6 +48,15 @@ function Hero() {
         .to('.producto', { y: '+=450', opacity: 0, duration: 0.8, ease: 'power2.in', stagger: 0.03 }, 'impacto+=0.7')
         .to('.aparece', { opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.7)', stagger: 0.15 }, 'impacto+=0.6')
         .to('.btn-saltar', { autoAlpha: 0, duration: 0.3 })
+
+        if (navbar) {
+  tl.fromTo(
+    navbar,
+    { backgroundColor: '#e7f2f2' },
+    { backgroundColor: '#1B2A2F', duration: 1.2, ease: 'power2.out' },
+    'impacto'
+  )
+}
     },
     { scope: contenedor }
   )
