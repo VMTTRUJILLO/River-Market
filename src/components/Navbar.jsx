@@ -1,4 +1,4 @@
-import PillNav from './PillNav'
+import { useState } from 'react'
 import './Navbar.css'
 
 const ITEMS = [
@@ -6,7 +6,6 @@ const ITEMS = [
   { label: 'Ofertas', href: '#ofertas' },
   { label: 'Categorías', href: '#categorias' },
   { label: 'Recetas', href: '#recetas' },
-  { label: 'Carrito', href: '#carrito' },
 ]
 
 const CartLogo = () => (
@@ -16,42 +15,61 @@ const CartLogo = () => (
 )
 
 const Navbar = () => {
+  const [menuAbierto, setMenuAbierto] = useState(false)
+  const [activo, setActivo] = useState('#inicio')
+
+  const irA = (href) => {
+    setActivo(href)
+    setMenuAbierto(false)
+  }
+
   return (
-    <header className="rm-navbar">
-      <div className="rm-navbar__nav">
-        <PillNav
-          logo={<CartLogo />}
-          logoAlt="RiverMarket"
-          logoHref="#inicio"
-          items={ITEMS}
-          defaultActiveIndex={0}
-          theme="light"
-          layout="split"
-          size="md"
-          surface="solid"
-          itemStyle="plain"
-          hoverEffect="fill"
-          indicator="dot"
-          barColor="#cfeff3"
-          highlightColor="#0e7c7c"
-          textColor="#1B2A2F"
-          bounce={0.3}
-          stretch={0.5}
-          collapse="auto"
-          intro
-          ariaLabel="Principal"
-        />
+    <nav className="navbar is-dark is-fixed-top rm-navbar" role="navigation" aria-label="main navigation">
+      <div className="navbar-brand">
+        <a className="navbar-item" href="#inicio">
+          <span className="icon is-medium"><CartLogo /></span>
+          <strong className="rm-brand">RiverMarket</strong>
+        </a>
+
+        <a
+          role="button"
+          className={`navbar-burger ${menuAbierto ? 'is-active' : ''}`}
+          aria-label="menu"
+          aria-expanded={menuAbierto}
+          onClick={() => setMenuAbierto(!menuAbierto)}
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
 
-      <div className="rm-navbar__actions">
-        <a className="button is-light is-rounded" href="#ingresar">
-          Ingresar
-        </a>
-        <a className="button is-warning is-rounded" href="#registro">
-          <strong>Registrarse</strong>
-        </a>
+      <div className={`navbar-menu ${menuAbierto ? 'is-active' : ''}`}>
+        <div className="navbar-start">
+          {ITEMS.map(({ label, href }) => (
+            <a
+              key={href}
+                href={href}
+                data-text={label}
+                className={`navbar-item is-tab rm-link ${activo === href ? 'is-active' : ''}`}
+                onClick={() => irA(href)}
+              >
+              <span className="rm-link__text">{label}</span>
+            </a>
+          ))}
+        </div>
+
+        <div className="navbar-end">
+          <div className="navbar-item">
+            <div className="buttons">
+              <a className="button is-light is-rounded" href="#ingresar">Ingresar</a>
+              <a className="button is-warning is-rounded" href="#registro"><strong>Registrarse</strong></a>
+            </div>
+          </div>
+        </div>
       </div>
-    </header>
+    </nav>
   )
 }
 

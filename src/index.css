@@ -1,5 +1,5 @@
 :root {
-  /* Bulma 1.x se personaliza con variables CSS (verifica nombres en sus docs) */
+  /* Bulma 1.x se personaliza con variables CSS */
   --bulma-primary-h: 180deg;
   --bulma-primary-s: 80%;
   --bulma-primary-l: 27%;
@@ -24,3 +24,26 @@ body { background: var(--rm-cream); color: var(--rm-ink); }
 
 .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
 .btn-saltar { position: absolute; right: 1rem; bottom: 1rem; z-index: 5; }
+
+/* Navegación por anclas: scroll suave y sin quedar tapado por el navbar fijo */
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: var(--bulma-navbar-height); }
+
+/* Carrusel */
+.rm-slide { border-radius: var(--bulma-radius-large); overflow: hidden; }
+.rm-emoji { display: inline-block; font-size: clamp(4rem, 10vw, 8rem); line-height: 1; }
+
+/* Puntos: el punto visible es chico, pero el área de clic es de 1.5rem */
+.rm-dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.5rem;
+  border: 0;
+  background-color: var(--rm-ink);
+  background-clip: content-box;
+  border-radius: 50%;
+  opacity: 0.25;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.rm-dot.is-active { opacity: 1; transform: scale(1.3); }

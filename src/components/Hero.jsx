@@ -62,7 +62,7 @@ function Hero() {
   )
 
   return (
-    <section ref={contenedor} className="hero is-primary is-fullheight rm-hero">
+    <section id="inicio" ref={contenedor} className="hero is-primary is-fullheight-with-navbar rm-hero">
       <div className="hero-body rm-body">
         <div className="flash"></div>
 
@@ -73,11 +73,11 @@ function Hero() {
         ))}
 
         <div className="container has-text-centered">
-          <h1 className="title is-1 aparece">RiverMarket</h1>
-          <p className="subtitle is-4 aparece">Productos y precios inigualables</p>
+          <h1 className="title is-1 has-text-white aparece">RiverMarket</h1>
+          <p className="subtitle is-4 has-text-white aparece">Productos y precios inigualables</p>
           <div className="buttons is-centered aparece">
-            <a className="button is-warning is-medium"><strong>Ver ofertas</strong></a>
-            <a className="button is-light is-medium">Cocinar con recetas</a>
+            <a className="button is-warning is-medium" href="#ofertas"><strong>Ver ofertas</strong></a>
+            <a className="button is-light is-medium" href="#recetas">Cocinar con recetas</a>
           </div>
         </div>
 
