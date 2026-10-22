@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
+import frutas from '../assets/ofertas/frutas2.png'
+import lacteos from '../assets/ofertas/lacteos.png'
+import verduras from '../assets/ofertas/verduras.webp'
+import carnes from '../assets/ofertas/carnes.png'
+
 const OFERTAS = [
-  { id: 1, color: 'warning', texto: 'has-text-dark',  etiqueta: '-30%', titulo: 'Frutas de temporada',   detalle: 'Frescura directa del campo a tu mesa',   emoji: '🍎🍌🍊', boton: 'Ver frutas' },
-  { id: 2, color: 'primary', texto: 'has-text-white', etiqueta: '2x1',  titulo: 'Lácteos para el mes',   detalle: 'Leche, queso y yogur al mejor precio',   emoji: '🥛🧀',   boton: 'Ver lácteos' },
-  { id: 3, color: 'success', texto: 'has-text-white', etiqueta: '-20%', titulo: 'Verduras frescas',      detalle: 'Del campo a tu cocina cada mañana',      emoji: '🥕🍅🥦', boton: 'Ver verduras' },
-  { id: 4, color: 'danger',  texto: 'has-text-white', etiqueta: '-25%', titulo: 'Carnes y huevos',       detalle: 'Proteína de calidad para toda la semana', emoji: '🥩🥚',   boton: 'Ver carnes' },
+  { id: 1, color: 'warning', texto: 'has-text-dark',  etiqueta: '-30%', titulo: 'Frutas de temporada',  detalle: 'Frescura directa del campo a tu mesa',    imagen: frutas,   alt: 'Frutas frescas de temporada',   boton: 'Ver frutas' },
+  { id: 2, color: 'primary', texto: 'has-text-white', etiqueta: '2x1',  titulo: 'Lácteos para el mes',  detalle: 'Leche, queso y yogur al mejor precio',    imagen: lacteos,  alt: 'Leche, queso y yogur',          boton: 'Ver lácteos' },
+  { id: 3, color: 'success', texto: 'has-text-white', etiqueta: '-20%', titulo: 'Verduras frescas',     detalle: 'Del campo a tu cocina cada mañana',       imagen: verduras, alt: 'Verduras frescas',              boton: 'Ver verduras' },
+  { id: 4, color: 'danger',  texto: 'has-text-white', etiqueta: '-25%', titulo: 'Carnes rojas',      detalle: 'Proteína de calidad para toda la semana', imagen: carnes,   alt: 'Carnes y huevos',               boton: 'Ver carnes' },
 ]
 
 const INTERVALO = 5000
@@ -28,6 +33,13 @@ function OfertasCarousel() {
     direccion.current = i > indice ? 1 : -1
     setIndice(i)
   }
+
+  // Precarga: todas las imágenes se descargan al inicio, así no "aparecen tarde" al cambiar de oferta
+  useEffect(() => {
+    OFERTAS.forEach((o) => {
+      new Image().src = o.imagen
+    })
+  }, [])
 
   // Autoplay: se reinicia con cada cambio y se detiene si hay hover/foco
   useEffect(() => {
@@ -73,8 +85,10 @@ function OfertasCarousel() {
                   <p className={`subtitle is-5 ${oferta.texto} slide-item`}>{oferta.detalle}</p>
                   <a className="button is-dark is-medium is-rounded slide-item" href="#categorias">{oferta.boton}</a>
                 </div>
-                <div className="column is-5 has-text-centered">
-                  <span className="rm-emoji slide-item" aria-hidden="true">{oferta.emoji}</span>
+                <div className="column is-5">
+                  <figure className="image is-4by3 rm-oferta-fig slide-item">
+                    <img src={oferta.imagen} alt={oferta.alt} />
+                  </figure>
                 </div>
               </div>
             </div>

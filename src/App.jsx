@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import OffersCarousel from './components/OffersCarousel'
+import Productos from './components/Productos'
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
   <Navbar />
   <Hero />
   <OffersCarousel />
+  <Productos />
 
   </>
   )
