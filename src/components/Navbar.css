@@ -73,3 +73,9 @@
   padding: 0 0.35rem;
   font-weight: 700;
 }
+
+/* Buscador en el espacio libre del navbar */
+.rm-search { flex: 1 1 14rem; max-width: 26rem; }
+
+/* Subrayado naranja para "Categorías" (su dropdown no usa is-tab) */
+.rm-navbar .navbar-link.rm-activo { box-shadow: inset 0 -3px 0 var(--rm-orange); }

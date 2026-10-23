@@ -53,8 +53,13 @@ function ProductoCard({ p }) {
   )
 }
 
-function Productos() {
+// Quita tildes y mayúsculas para comparar: "Lácteos" coincide con "lacteos"
+const normalizar = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+function Productos({ busqueda = '', onLimpiar }) {
   const contenedor = useRef(null)
+  const termino = normalizar(busqueda.trim())
+  const visibles = PRODUCTOS.filter((p) => normalizar(p.nombre).includes(termino))
 
   useGSAP(
     () => {
@@ -72,13 +77,28 @@ function Productos() {
   )
 
   return (
-    <section id="productos" ref={contenedor} className="section">
+    <section id="productos" ref={contenedor} className="section has-background-white">
       <div className="container">
         <h2 className="title is-3">Productos imperdibles</h2>
         <p className="subtitle is-6">Los favoritos de la semana, con precio especial</p>
 
+        {termino && (
+          <p className="mb-4">
+            {visibles.length} resultado(s) para <span className="has-text-weight-bold">“{busqueda}”</span>{' '}
+            <button className="button is-small is-light is-rounded ml-2" onClick={onLimpiar}>
+              Limpiar búsqueda
+            </button>
+          </p>
+        )}
+
+        {visibles.length === 0 && (
+          <div className="notification is-warning is-light">
+            No encontramos ese producto entre los destacados. El catálogo completo estará disponible en el módulo de productos.
+          </div>
+        )}
+
         <div className="columns is-multiline is-mobile rm-prod-grid">
-          {PRODUCTOS.map((p) => (
+          {visibles.map((p) => (
             <ProductoCard key={p.id} p={p} />
           ))}
         </div>
