@@ -7,6 +7,7 @@ import Categorias from './components/Categorias'
 import Tiendas from './components/Tiendas'
 import BusquedasFrecuentes from './components/BusquedasFrecuentes'
 import Footer from './components/Footer'
+import CarritoPanel from './components/CarritoPanel'
 
 function App() {
   const [busqueda, setBusqueda] = useState('')
@@ -26,6 +27,7 @@ function App() {
       <Tiendas />
       <BusquedasFrecuentes onElegir={buscarDesdeFrecuentes} />
       <Footer />
+      <CarritoPanel />
     </>
   )
 }

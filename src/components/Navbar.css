@@ -79,3 +79,13 @@
 
 /* Subrayado naranja para "Categorías" (su dropdown no usa is-tab) */
 .rm-navbar .navbar-link.rm-activo { box-shadow: inset 0 -3px 0 var(--rm-orange); }
+
+.rm-navbar .rm-cart-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}

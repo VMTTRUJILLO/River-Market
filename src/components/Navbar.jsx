@@ -20,7 +20,7 @@ const Navbar = ({ busqueda, onBuscar }) => {
   const navRef = useRef(null)
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [activo, setActivo] = useState('#inicio')
-  const { cantidadTotal } = useCarrito()
+  const { cantidadTotal, abrirCarrito } = useCarrito()
 
   const irA = (href) => {
     setActivo(href)
@@ -162,12 +162,21 @@ const Navbar = ({ busqueda, onBuscar }) => {
             </span>
           </a>
 
-          <a className="navbar-item" href="#carrito" aria-label={`Carrito de compras, ${cantidadTotal} productos`}>
+          <button
+            type="button"
+            className="navbar-item rm-cart-btn"
+            aria-label={`Abrir carrito de compras, ${cantidadTotal} productos`}
+            aria-haspopup="dialog"
+            onClick={() => {
+              setMenuAbierto(false)
+              abrirCarrito()
+            }}
+          >
             <span className="icon is-medium rm-cart">
               <CartIcon />
               <span className="tag is-warning is-rounded rm-badge">{cantidadTotal}</span>
             </span>
-          </a>
+          </button>
         </div>
       </div>
     </nav>
