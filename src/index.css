@@ -1,4 +1,6 @@
 :root {
+  color-scheme: light;
+
   /* Bulma 1.x se personaliza con variables CSS */
   --bulma-primary-h: 180deg;
   --bulma-primary-s: 80%;
@@ -9,9 +11,36 @@
   --rm-orange: #FF8A00;
   --rm-cream: #FFF8EC;
   --rm-ink: #1B2A2F;
+  --rm-text-color: #1B2A2F;
+  --rm-surface: #fff;
+  --rm-border: #eee;
+  --rm-chip-bg: #d9eeee;
+  --rm-chip-text: #145456;
 }
 
-body { background: var(--rm-cream); color: var(--rm-ink); }
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --rm-cream: #182124;
+    --rm-text-color: #edf2f2;
+    --rm-surface: #202b2f;
+    --rm-border: #3a484b;
+    --rm-chip-bg: #263638;
+    --rm-chip-text: #d4eeee;
+  }
+}
+
+
+body { background: var(--rm-cream); color: var(--rm-text-color); }
+.has-background-white {
+  background-color: var(--rm-surface) !important;
+  color: var(--rm-text-color);
+}
+.rm-chip.button.is-primary.is-light {
+  background-color: var(--rm-chip-bg);
+  color: var(--rm-chip-text);
+}
 .title, .subtitle { font-family: 'Fredoka', sans-serif; }
 
 .rm-hero,
@@ -101,3 +130,5 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 .rm-footer-links a { color: #b5b5b5; transition: color 0.2s; }
 .rm-footer-links a:hover { color: #fff; }
 .rm-footer-linea { background-color: rgba(255, 255, 255, 0.15); }
+
+.
