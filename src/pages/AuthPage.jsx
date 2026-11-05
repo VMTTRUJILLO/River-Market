@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from '../utils/Link'
 import { useAuth } from '../context/AuthContext'
 import './AuthPage.css'
 
