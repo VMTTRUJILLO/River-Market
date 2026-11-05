@@ -1,9 +1,9 @@
 const ENLACES = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Ofertas', href: '#ofertas' },
-  { label: 'Productos', href: '#productos' },
-  { label: 'Categorías', href: '#categorias' },
-  { label: 'Nuestras tiendas', href: '#tiendas' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Ofertas', href: '/#ofertas' },
+  { label: 'Productos', href: '/#productos' },
+  { label: 'Categorías', href: '/categorias' },
+  { label: 'Nuestras tiendas', href: '/#tiendas' },
 ]
 
 function Footer() {
