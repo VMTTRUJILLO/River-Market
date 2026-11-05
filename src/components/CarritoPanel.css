@@ -91,3 +91,4 @@
   padding: 2rem;
   text-align: center;
 }
+.rm-cart-product-image{width:4.5rem;height:4.5rem;object-fit:contain;border-radius:10px;background:var(--rm-surface);flex-shrink:0;padding:.2rem}
