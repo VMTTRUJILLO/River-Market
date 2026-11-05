@@ -126,7 +126,7 @@ function CarritoPanel() {
             <ul className="rm-cart-list">
               {items.map((p) => (
                 <li key={p.id} className="rm-cart-line">
-                  <span className="rm-cart-emoji" aria-hidden="true">{p.emoji}</span>
+                  <img className="rm-cart-product-image" src={p.imagen} alt={p.nombre} />
 
                   <div>
                     <p className="has-text-weight-semibold">{p.nombre}</p>
