@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import OffersCarousel from './components/OffersCarousel'
@@ -14,7 +14,8 @@ import CategoriasPage from './pages/CategoriasPage'
 import RecetasPage from './pages/RecetasPage'
 
 function HomePage() {
-  const [busqueda, setBusqueda] = useState('')
+  const [busqueda, setBusqueda] = useState(() => new URLSearchParams(window.location.search).get('q') || '')
+  useEffect(() => { if (busqueda) document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' }) }, [])
   const buscarDesdeFrecuentes = (termino) => {
     setBusqueda(termino)
     document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' })
