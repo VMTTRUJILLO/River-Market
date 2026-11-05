@@ -143,5 +143,3 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 .rm-category-tile img { width:86px; height:76px; object-fit:cover; border-radius:10px; }
 .rm-category-tile span { display:grid; gap:.3rem; }
 .rm-category-tile small { color:#829092; }
-
-.
