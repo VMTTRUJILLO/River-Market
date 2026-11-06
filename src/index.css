@@ -1,13 +1,13 @@
 :root {
   color-scheme: light;
 
-  /* Bulma 1.x se personaliza con variables CSS */
+
   --bulma-primary-h: 180deg;
   --bulma-primary-s: 80%;
   --bulma-primary-l: 27%;
   --bulma-family-primary: 'Nunito', sans-serif;
 
-  /* variables propias de RiverMarket */
+
   --rm-orange: #FF8A00;
   --rm-cream: #FFF8EC;
   --rm-ink: #1B2A2F;
@@ -46,7 +46,7 @@ body { background: var(--rm-cream); color: var(--rm-text-color); }
 .rm-hero,
 .rm-body { position: relative; overflow: hidden; }
 
-/* actores: centrados en el hero; GSAP los mueve desde ahí */
+
 .rm-abs { position: absolute; top: 50%; left: 50%; pointer-events: none; }
 .carrito { font-size: clamp(5rem, 14vw, 10rem); line-height: 1; }
 .producto { font-size: clamp(2rem, 6vw, 4rem); line-height: 1; }
@@ -54,11 +54,11 @@ body { background: var(--rm-cream); color: var(--rm-text-color); }
 .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
 .btn-saltar { position: absolute; right: 1rem; bottom: 1rem; z-index: 5; }
 
-/* Navegación por anclas: scroll suave y sin quedar tapado por el navbar fijo */
+
 html { scroll-behavior: smooth; }
 section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 
-/* Carrusel */
+
 .rm-slide { border-radius: var(--bulma-radius-large); overflow: hidden; }
 .rm-oferta-fig { max-width: 350px; margin: 0 auto; }
 .rm-oferta-fig img {
@@ -66,7 +66,7 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
   filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.25));
 }
 
-/* Puntos: el punto visible es chico, pero el área de clic es de 1.5rem */
+
 .rm-dot {
   width: 1.5rem;
   height: 1.5rem;
