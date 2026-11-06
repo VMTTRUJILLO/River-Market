@@ -18,14 +18,7 @@ function Footer() {
             </p>
           </div>
 
-          <div className="column is-3">
-            <p className="title is-6 has-text-white">Explora</p>
-            <ul className="rm-footer-links">
-              {ENLACES.map(({ label, href }) => (
-                <li key={href}><a href={href}>{label}</a></li>
-              ))}
-            </ul>
-          </div>
+          
 
           <div className="column is-4">
             <p className="title is-6 has-text-white">Atención al cliente</p>
