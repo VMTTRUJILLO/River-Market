@@ -99,3 +99,23 @@
   cursor: pointer;
   text-align: left;
 }
+
+.rm-navbar .rm-cat-link {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.rm-caret {
+  width: .5em;
+  height: .5em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-25%) rotate(45deg);   /* apunta hacia abajo */
+  transition: transform .2s ease;
+}
+
+/* al abrir el menú, la flecha gira hacia arriba */
+.rm-navbar .has-dropdown:hover .rm-caret {
+  transform: translateY(25%) rotate(225deg);
+}
