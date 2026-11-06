@@ -1,10 +1,19 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useState, useEffect } from 'react'
 
 const CarritoContext = createContext(null)
 
+const CART_KEY = 'rivermarket_carrito'
+const leerCarrito = () => {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) ?? [] } catch { return [] }
+}
+
 export function CarritoProvider({ children }) {
-  const [items, setItems] = useState([]) // [{ id, nombre, precio, cantidad, ... }]
+  const [items, setItems] = useState(leerCarrito) 
   const [abierto, setAbierto] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem(CART_KEY, JSON.stringify(items))
+  }, [items])
 
   const agregar = (producto) => {
     setItems((actual) => {
