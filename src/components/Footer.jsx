@@ -1,9 +1,9 @@
 const ENLACES = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Ofertas', href: '#ofertas' },
-  { label: 'Productos', href: '#productos' },
-  { label: 'Categorías', href: '#categorias' },
-  { label: 'Nuestras tiendas', href: '#tiendas' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Ofertas', href: '/#ofertas' },
+  { label: 'Productos', href: '/#productos' },
+  { label: 'Categorías', href: '/categorias' },
+  { label: 'Nuestras tiendas', href: '/#tiendas' },
 ]
 
 function Footer() {
@@ -38,9 +38,9 @@ function Footer() {
         </div>
 
         <hr className="rm-footer-linea" />
-        <p className="is-size-7 has-text-grey-light has-text-centered">
+        <div className="rm-footer-bottom"><p className="is-size-7 has-text-grey-light">
           © {new Date().getFullYear()} RiverMarket · Todos los derechos reservados
-        </p>
+        </p></div>
       </div>
     </footer>
   )

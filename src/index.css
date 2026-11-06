@@ -129,5 +129,4 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 .rm-footer-links li { margin-bottom: 0.5rem; color: #b5b5b5; }
 .rm-footer-links a { color: #b5b5b5; transition: color 0.2s; }
 .rm-footer-links a:hover { color: #fff; }
-.rm-footer-linea { background-color: rgba(255, 255, 255, 0.15); }
 

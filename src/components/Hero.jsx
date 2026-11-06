@@ -78,7 +78,7 @@ function Hero() {
           <p className="subtitle is-4 has-text-white aparece">Productos y precios inigualables</p>
           <div className="buttons is-centered aparece">
             <a className="button is-warning is-medium" href="#ofertas"><strong>Ver ofertas</strong></a>
-            <a className="button is-light is-medium" href="#recetas">Cocinar con recetas</a>
+            <a className="button is-light is-medium" href="/recetas">Cocinar con recetas</a>
           </div>
         </div>
 
