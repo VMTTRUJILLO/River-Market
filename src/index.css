@@ -130,3 +130,98 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 .rm-footer-links a { color: #b5b5b5; transition: color 0.2s; }
 .rm-footer-links a:hover { color: #fff; }
 
+
+
+/* Footer: marca a la izquierda, contacto a la derecha y copyright centrado */
+.rm-footer {
+  padding: 3.25rem 1.5rem 2rem;
+}
+.rm-footer-main {
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.rm-footer-brand .title,
+.rm-footer-contact .title {
+  margin-bottom: 1rem;
+}
+.rm-footer-description {
+  max-width: 36rem;
+  line-height: 1.7;
+}
+.rm-footer-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+.rm-footer-contact .rm-footer-links {
+  text-align: right;
+}
+.rm-footer-contact .rm-footer-links li {
+  margin-bottom: .65rem;
+  line-height: 1.6;
+}
+.rm-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-top: 1.25rem;
+}
+.rm-social-link {
+  width: 2.65rem;
+  height: 2.65rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 50%;
+  transition: background-color .2s ease, color .2s ease, transform .2s ease;
+}
+.rm-social-link svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+.rm-social-link:hover,
+.rm-social-link:focus-visible {
+  color: var(--rm-ink);
+  background: var(--rm-orange);
+  transform: translateY(-3px);
+}
+.rm-footer-social-hint {
+  margin-top: .55rem;
+  color: #9eabad;
+  font-size: .75rem;
+}
+.rm-footer-linea {
+  height: 1px;
+  border: 0;
+  background: rgba(255,255,255,.2);
+  margin: 1.5rem 0 0;
+}
+.rm-footer-bottom {
+  min-height: 5.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0;
+  text-align: center;
+}
+.rm-footer-bottom p {
+  margin: 0;
+  color: #c5cecf;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .rm-footer { padding: 2.5rem 1.25rem 1.25rem; }
+  .rm-footer-contact {
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 1.25rem;
+  }
+  .rm-footer-contact .rm-footer-links { text-align: left; }
+  .rm-footer-bottom { min-height: 4.5rem; }
+}
