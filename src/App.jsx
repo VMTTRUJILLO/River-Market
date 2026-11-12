@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import OffersCarousel from './components/OffersCarousel'
@@ -12,29 +12,66 @@ import AuthPage from './pages/AuthPage'
 import CategoriaPage from './pages/CategoriaPage'
 import CategoriasPage from './pages/CategoriasPage'
 import RecetasPage from './pages/RecetasPage'
+import AdminPage from './pages/AdminPage'
+import { navigate, useRoute } from './utils/useRoute'
+import { Link } from './utils/Link'
+import './pages/Catalogo.css'
 
-function HomePage() {
-  const [busqueda, setBusqueda] = useState(() => new URLSearchParams(window.location.search).get('q') || '')
-  useEffect(() => { if (busqueda) document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' }) }, [])
-  const buscarDesdeFrecuentes = (termino) => {
-    setBusqueda(termino)
-    document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' })
-  }
-  return <>
-    <Navbar busqueda={busqueda} onBuscar={setBusqueda}/>
-    <Hero/><OffersCarousel/>
-    <Productos busqueda={busqueda} onLimpiar={() => setBusqueda('')}/>
-    <Categorias/><Tiendas/>
-    <BusquedasFrecuentes onElegir={buscarDesdeFrecuentes}/>
-    <Footer/><CarritoPanel/>
-  </>
+function HomePage({ busqueda }) {
+  return (
+    <main>
+      {!busqueda && (
+        <>
+          <Hero />
+          <OffersCarousel />
+        </>
+      )}
+      <Productos busqueda={busqueda} onLimpiar={() => navigate('/#productos')} />
+      {!busqueda && (
+        <>
+          <Categorias />
+          <Tiendas />
+          <BusquedasFrecuentes
+            onElegir={(termino) => navigate(`/?q=${encodeURIComponent(termino)}#productos`)}
+          />
+        </>
+      )}
+    </main>
+  )
 }
 
 export default function App() {
-  const path = window.location.pathname.replace(/\/$/, '') || '/'
-  if (path === '/ingresar') return <AuthPage/>
-  if (path === '/recetas') return <RecetasPage/>
-  if (path === '/categorias') return <CategoriasPage/>
-  if (path.startsWith('/categoria/')) return <CategoriaPage/>
-  return <HomePage/>
+  const { path, search, hash, href } = useRoute()
+  const auth = path === '/ingresar'
+  useEffect(() => {
+    document.documentElement.classList.toggle('has-navbar-fixed-top', !auth)
+    const frame = requestAnimationFrame(() => {
+      const target = hash ? document.getElementById(hash.slice(1)) : null
+      if (target) target.scrollIntoView()
+      else window.scrollTo(0, 0)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [href, auth, hash])
+  let pagina
+  if (auth) pagina = <AuthPage />
+  else if (path === '/admin') pagina = <AdminPage />
+  else if (path === '/recetas') pagina = <RecetasPage />
+  else if (path === '/categorias') pagina = <CategoriasPage />
+  else if (path.startsWith('/categoria/')) pagina = <CategoriaPage />
+  else if (path === '/') pagina = <HomePage busqueda={search.get('q')?.trim() || ''} />
+  else
+    pagina = (
+      <main className="section container">
+        <h1 className="title">Página no encontrada</h1>
+        <Link href="/">Volver al inicio</Link>
+      </main>
+    )
+  return (
+    <>
+      {!auth && <Navbar />}
+      {pagina}
+      {!auth && <Footer />}
+      <CarritoPanel />
+    </>
+  )
 }

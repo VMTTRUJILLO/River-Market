@@ -1,3 +1,4 @@
+import { useState } from 'react'
 const REDES_SOCIALES = [
   {
     nombre: 'Instagram',
@@ -20,6 +21,7 @@ const REDES_SOCIALES = [
 ]
 
 function Footer() {
+  const [ano] = useState(() => new Date().getFullYear())
   return (
     <footer className="footer rm-footer">
       <div className="container">
@@ -52,7 +54,7 @@ function Footer() {
 
         <hr className="rm-footer-linea" />
         <div className="rm-footer-bottom">
-          <p>© {new Date().getFullYear()} RiverMarket · Todos los derechos reservados</p>
+          <p>© {ano} RiverMarket · Todos los derechos reservados</p>
         </div>
       </div>
     </footer>

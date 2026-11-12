@@ -1,60 +1,78 @@
-import { createContext, useCallback, useContext, useState, useEffect } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { useTienda } from './useTienda'
+import { useNotificar } from './useNotificaciones'
+import { guardar, leer } from '../utils/storage'
 
-const CarritoContext = createContext(null)
-
-const CART_KEY = 'rivermarket_carrito'
-const leerCarrito = () => {
-  try { return JSON.parse(localStorage.getItem(CART_KEY)) ?? [] } catch { return [] }
-}
-
+import { CarritoContext as Context } from './useCarrito'
+const KEY = 'rivermarket_carrito'
 export function CarritoProvider({ children }) {
-  const [items, setItems] = useState(leerCarrito) 
+  const { productos } = useTienda()
+  const notificar = useNotificar()
+  const [guardados, setGuardados] = useState(() =>
+    leer(KEY, [], Array.isArray).filter(
+      (i) => i && typeof i.id === 'string' && Number.isSafeInteger(i.cantidad) && i.cantidad > 0,
+    ),
+  )
+  const ref = useRef(guardados)
   const [abierto, setAbierto] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem(CART_KEY, JSON.stringify(items))
-  }, [items])
-
+  const items = guardados.map((item) => {
+    const producto = productos.find((p) => p.id === item.id)
+    return { ...item, ...producto, cantidad: item.cantidad, disponible: Boolean(producto?.activo) }
+  })
+  const actualizar = (nuevos) => {
+    try {
+      guardar(KEY, nuevos)
+      ref.current = nuevos
+      setGuardados(nuevos)
+      return true
+    } catch (error) {
+      notificar(error.message, 'error')
+      return false
+    }
+  }
   const agregar = (producto) => {
-    setItems((actual) => {
-      const existe = actual.find((i) => i.id === producto.id)
-      if (existe) {
-        return actual.map((i) => (i.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i))
-      }
-      return [...actual, { ...producto, cantidad: 1 }]
-    })
+    const vigente = productos.find((p) => p.id === producto.id && p.activo)
+    const cantidad = ref.current.find((i) => i.id === producto.id)?.cantidad || 0
+    if (!vigente || cantidad >= vigente.stock) {
+      notificar(
+        !vigente ? 'Este producto ya no está disponible.' : `No hay más existencias de ${vigente.nombre}.`,
+        'error',
+      )
+      return false
+    }
+    const nuevos = cantidad
+      ? ref.current.map((i) => (i.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i))
+      : [...ref.current, { ...vigente, cantidad: 1 }]
+    if (!actualizar(nuevos)) return false
+    notificar(`${vigente.nombre} se agregó a tu carrito.`)
+    return true
   }
-
-  // Resta una unidad; si llega a 0, el producto sale del carrito
-  const restar = (id) => {
-    setItems((actual) =>
-      actual
+  const restar = (id) =>
+    actualizar(
+      ref.current
         .map((i) => (i.id === id ? { ...i, cantidad: i.cantidad - 1 } : i))
-        .filter((i) => i.cantidad > 0)
+        .filter((i) => i.cantidad > 0),
     )
-  }
-
-  const quitar = (id) => setItems((actual) => actual.filter((i) => i.id !== id))
-  const vaciar = () => setItems([])
-
-  // useCallback: referencias estables para usarlas en efectos sin que se reinicien
+  const quitar = (id) => actualizar(ref.current.filter((i) => i.id !== id))
+  const vaciar = () => actualizar([])
   const abrirCarrito = useCallback(() => setAbierto(true), [])
   const cerrarCarrito = useCallback(() => setAbierto(false), [])
-
-  const cantidadTotal = items.reduce((suma, i) => suma + i.cantidad, 0)
-  const total = items.reduce((suma, i) => suma + i.precio * i.cantidad, 0)
-
   return (
-    <CarritoContext.Provider
-      value={{ items, agregar, restar, quitar, vaciar, cantidadTotal, total, abierto, abrirCarrito, cerrarCarrito }}
+    <Context.Provider
+      value={{
+        items,
+        agregar,
+        restar,
+        quitar,
+        vaciar,
+        cantidadTotal: items.reduce((sum, i) => sum + i.cantidad, 0),
+        total: items.reduce((sum, i) => sum + i.precio * i.cantidad, 0),
+        abierto,
+        abrirCarrito,
+        cerrarCarrito,
+      }}
     >
       {children}
-    </CarritoContext.Provider>
+    </Context.Provider>
   )
-}
-
-export function useCarrito() {
-  const ctx = useContext(CarritoContext)
-  if (!ctx) throw new Error('useCarrito debe usarse dentro de <CarritoProvider>')
-  return ctx
 }

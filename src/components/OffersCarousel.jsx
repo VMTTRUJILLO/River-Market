@@ -1,3 +1,4 @@
+import { Link } from '../utils/Link'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -46,7 +47,7 @@ function OfertasCarousel() {
     if (pausado || reducirMovimiento) return
     const id = setInterval(() => mover(1), INTERVALO)
     return () => clearInterval(id)
-  }, [pausado, indice])
+  }, [pausado, indice, reducirMovimiento])
 
   // Animación de entrada cada vez que cambia la oferta
   useGSAP(
@@ -54,7 +55,7 @@ function OfertasCarousel() {
       const d = direccion.current
       const dur = reducirMovimiento ? 0 : 0.6
       gsap.fromTo('.rm-slide', { opacity: 0, x: 60 * d }, { opacity: 1, x: 0, duration: dur, ease: 'power3.out' })
-      gsap.from('.slide-item', { y: 24, opacity: 0, duration: dur, ease: 'back.out(1.7)', stagger: 0.1, delay: 0.15 })
+      gsap.from('.slide-item', { y: 24, opacity: 0, duration: dur, ease: 'back.out(1.7)', stagger: reducirMovimiento ? 0 : 0.1, delay: reducirMovimiento ? 0 : 0.15 })
     },
     { scope: contenedor, dependencies: [indice], revertOnUpdate: true }
   )
@@ -83,7 +84,7 @@ function OfertasCarousel() {
                   <span className="tag is-dark is-large mb-4 slide-item">{oferta.etiqueta}</span>
                   <h3 className={`title is-2 ${oferta.texto} slide-item`}>{oferta.titulo}</h3>
                   <p className={`subtitle is-5 ${oferta.texto} slide-item`}>{oferta.detalle}</p>
-                  <a className="button is-dark is-medium is-rounded slide-item" href="#categorias">{oferta.boton}</a>
+                  <Link className="button is-dark is-medium is-rounded slide-item" href="#categorias">{oferta.boton}</Link>
                 </div>
                 <div className="column is-5">
                   <figure className="image is-4by3 rm-oferta-fig slide-item">

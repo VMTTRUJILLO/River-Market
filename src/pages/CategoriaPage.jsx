@@ -1,46 +1,47 @@
 import { useParams } from '../utils/useRoute'
 import { CATEGORIAS } from '../data/categorias'
-import { PRODUCTOS } from '../data/productos'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import CarritoPanel from '../components/CarritoPanel'
-import { useCarrito } from '../context/CarritoContext'
-import './Catalogo.css'
-
-const dinero = n => n.toLocaleString('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0})
-function Tarjeta({ producto }) {
- const { agregar } = useCarrito()
- return <article className="rm-catalog-card"><img src={producto.imagen} alt={producto.nombre} loading="lazy"/><div><h3>{producto.nombre}</h3><p>{producto.presentacion}</p><strong>{dinero(producto.precio)}</strong>{producto.precioAntes && <del>{dinero(producto.precioAntes)}</del>}<button onClick={()=>agregar(producto)}>Agregar al carrito</button></div></article>
-}
-export default function CategoriaPage(){
- const { id } = useParams()
- const categoria=CATEGORIAS.find(c=>c.id===id)
- const productos=PRODUCTOS.filter(p=>p.categoria===id)
- if(!categoria) return <><Navbar/>
-    <main className="container section">
+import { useTienda } from '../context/useTienda'
+import { Link } from '../utils/Link'
+import ProductoCard from '../components/ProductoCard'
+export default function CategoriaPage() {
+  const { id } = useParams()
+  const { productos } = useTienda()
+  const categoria = CATEGORIAS.find((c) => c.id === id)
+  const visibles = productos.filter((p) => p.categoria === id && p.activo)
+  if (!categoria)
+    return (
+      <main className="container section">
         <h1 className="title">Categoría no encontrada</h1>
-        <a href="/">Volver al inicio</a>
-    </main>
-    <Footer/>
-</>
- return <>
-    <Navbar/>
+        <Link href="/categorias">Ver categorías</Link>
+      </main>
+    )
+  return (
     <main className="section rm-catalog-page">
-        <div className="container">
-            <a href="/#categorias">← Todas las categorías</a>
-            <header className="rm-catalog-heading">
-                <img src={categoria.imagen} alt=""/>
-                <div>
-                    <span>CATÁLOGO RIVERMARKET</span>
-                    <h1>{categoria.nombre}</h1>
-                    <p>{categoria.detalle}. Encuentra tus favoritos y agrégalos al carrito.</p>
-                </div>
-            </header>
-            <p className="subtitle is-6">{productos.length} productos disponibles</p>
-            <div className="rm-catalog-grid">{productos.map(p=><Tarjeta key={p.id} producto={p}/>)}</div>
+      <div className="container">
+        <Link href="/categorias">← Todas las categorías</Link>
+        <header className="rm-catalog-heading">
+          <img src={categoria.imagen} alt="" />
+          <div>
+            <span>CATÁLOGO RIVERMARKET</span>
+            <h1>{categoria.nombre}</h1>
+            <p>{categoria.detalle}. Encuentra tus favoritos y agrégalos al carrito.</p>
+          </div>
+        </header>
+        <p className="subtitle is-6">{visibles.length} productos en esta categoría</p>
+        <div className="rm-product-grid">
+          {visibles.map((p) => (
+            <ProductoCard key={p.id} producto={p} />
+          ))}
         </div>
+        {!visibles.length && (
+          <div className="rm-empty-state">
+            <h2 className="title is-4">Estamos preparando más productos</h2>
+            <Link href="/categorias" className="button is-primary is-rounded">
+              Explorar otras categorías
+            </Link>
+          </div>
+        )}
+      </div>
     </main>
-    <Footer/>
-    <CarritoPanel/>
-</>
+  )
 }

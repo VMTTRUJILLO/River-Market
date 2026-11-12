@@ -1,24 +1,134 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import CartIcon from './CartIcon'
 import PersonIcon from './PersonIcon'
-import { useCarrito } from '../context/CarritoContext'
-import { useAuth } from '../context/AuthContext'
+import { useCarrito } from '../context/useCarrito'
+import { useAuth } from '../context/useAuth'
 import { CATEGORIAS } from '../data/categorias'
+import { Link } from '../utils/Link'
+import { navigate, useRoute } from '../utils/useRoute'
 import './Navbar.css'
 
-export default function Navbar({ busqueda = '', onBuscar }) {
- const [menuAbierto,setMenuAbierto]=useState(false)
- const {cantidadTotal,abrirCarrito}=useCarrito()
- const {usuario}=useAuth()
-
-const [textoLocal, setTextoLocal] = useState(() => new URLSearchParams(window.location.search).get('q') || '')
-const valor = onBuscar ? busqueda : textoLocal
-const cambiar = onBuscar ?? setTextoLocal
-
-    useEffect(() => {
-    document.documentElement.classList.add('has-navbar-fixed-top')
-    return () => document.documentElement.classList.remove('has-navbar-fixed-top')
-    }, [])
- const enviarBusqueda=e=>{e.preventDefault();window.location.href='/?q='+encodeURIComponent(busqueda)+'#productos'}
- return <nav className="navbar is-dark is-fixed-top rm-navbar" role="navigation" aria-label="main navigation"><div className="navbar-brand"><a className="navbar-item" href="/"><strong className="rm-brand">RiverMarket</strong></a><button className={'navbar-burger '+(menuAbierto?'is-active':'')} aria-label="Abrir menú" aria-expanded={menuAbierto} onClick={()=>setMenuAbierto(!menuAbierto)}><span/><span/><span/><span/></button></div><div className={'navbar-menu '+(menuAbierto?'is-active':'')}><div className="navbar-start"><a className="navbar-item rm-link" href="/">Inicio</a><a className="navbar-item rm-link" href="/#ofertas">Ofertas</a><a className="navbar-item rm-link" href="/#productos">Productos</a><a className="navbar-item rm-link" href="/recetas">Recetas</a><div className="navbar-item has-dropdown is-hoverable"><a className="navbar-link is-arrowless rm-link rm-cat-link" href="/categorias">Categorías<span className="rm-caret" aria-hidden="true"/></a><div className="navbar-dropdown"><a className="navbar-item" href="/categorias"><b>Ver todas las categorías</b></a><hr className="navbar-divider"/>{CATEGORIAS.map(c=><a key={c.id} className="navbar-item" href={'/categoria/'+c.id}>{c.nombre}</a>)}</div></div></div><form className="navbar-item rm-search" role="search" onSubmit={enviarBusqueda}><div className="control is-expanded"><input className="input is-rounded" type="search" placeholder="Buscar productos..." aria-label="Buscar productos" value={busqueda} onChange={e=>onBuscar(e.target.value)}/></div></form><div className="navbar-end"><a className="navbar-item" href="/ingresar"><span className="icon is-medium has-text-warning"><PersonIcon/></span><span className="ml-2 has-text-weight-bold">{usuario?usuario.nombre:'Mi cuenta'}</span></a><button type="button" className="navbar-item rm-cart-btn" aria-label={'Abrir carrito, '+cantidadTotal+' productos'} onClick={abrirCarrito}><span className="icon is-medium rm-cart"><CartIcon/><span className="tag is-warning is-rounded rm-badge">{cantidadTotal}</span></span></button></div></div></nav>
+export default function Navbar() {
+  const [menuAbierto, setMenuAbierto] = useState(false)
+  const [texto, setTexto] = useState('')
+  const { cantidadTotal, abrirCarrito } = useCarrito()
+  const { usuario } = useAuth()
+  const { path } = useRoute()
+  const enviarBusqueda = (event) => {
+    event.preventDefault()
+    const termino = texto.trim()
+    setTexto('')
+    setMenuAbierto(false)
+    navigate(termino ? `/?q=${encodeURIComponent(termino)}#productos` : '/#productos')
+  }
+  const cerrarMenu = () => setMenuAbierto(false)
+  return (
+    <nav className="navbar is-dark is-fixed-top rm-navbar" aria-label="Navegación principal">
+      <div className="navbar-brand">
+        <Link className="navbar-item" href="/" onClick={cerrarMenu}>
+          <strong className="rm-brand">RiverMarket</strong>
+        </Link>
+        <button
+          type="button"
+          className={`navbar-burger ${menuAbierto ? 'is-active' : ''}`}
+          aria-label="Abrir menú"
+          aria-expanded={menuAbierto}
+          aria-controls="rm-navigation"
+          onClick={() => setMenuAbierto(!menuAbierto)}
+        >
+          <span />
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+      <div id="rm-navigation" className={`navbar-menu ${menuAbierto ? 'is-active' : ''}`}>
+        <div className="navbar-start">
+          {[
+            ['/', 'Inicio'],
+            ['/#ofertas', 'Ofertas'],
+            ['/#productos', 'Productos'],
+            ['/recetas', 'Recetas'],
+          ].map(([href, texto]) => (
+            <Link className="navbar-item rm-link" href={href} key={href} onClick={cerrarMenu}>
+              {texto}
+            </Link>
+          ))}
+          <div className="navbar-item has-dropdown is-hoverable">
+            <Link className="navbar-link is-arrowless rm-cat-link" href="/categorias" onClick={cerrarMenu}>
+              Categorías
+              <span className="rm-caret" aria-hidden="true" />
+            </Link>
+            <div className="navbar-dropdown">
+              <Link className="navbar-item" href="/categorias" onClick={cerrarMenu}>
+                <b>Ver todas las categorías</b>
+              </Link>
+              <hr className="navbar-divider" />
+              {CATEGORIAS.map((c) => (
+                <Link key={c.id} className="navbar-item" href={`/categoria/${c.id}`} onClick={cerrarMenu}>
+                  {c.nombre}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+        <form className="navbar-item rm-search" role="search" onSubmit={enviarBusqueda}>
+          <input
+            className="input is-rounded"
+            type="search"
+            placeholder="Buscar productos..."
+            aria-label="Buscar productos"
+            maxLength={100}
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+          />
+          <button type="submit" className="button is-warning is-rounded" aria-label="Buscar">
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 6 6" />
+            </svg>
+          </button>
+        </form>
+        <div className="navbar-end">
+          {usuario?.rol === 'admin' && (
+            <Link
+              href="/admin"
+              onClick={cerrarMenu}
+              className={`navbar-item rm-admin-link ${path === '/admin' ? 'is-active' : ''}`}
+            >
+              Administrar
+            </Link>
+          )}
+          <Link className="navbar-item" href="/ingresar" onClick={cerrarMenu}>
+            <span className="icon has-text-warning">
+              <PersonIcon />
+            </span>
+            <span className="ml-2 rm-user-name">{usuario ? usuario.nombre : 'Mi cuenta'}</span>
+          </Link>
+          <button
+            type="button"
+            className="navbar-item rm-cart-btn"
+            aria-label={`Abrir carrito, ${cantidadTotal} productos`}
+            onClick={() => {
+              cerrarMenu()
+              abrirCarrito()
+            }}
+          >
+            <span className="icon is-medium rm-cart">
+              <CartIcon />
+              <span className="tag is-warning is-rounded rm-badge">{cantidadTotal}</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  )
 }
