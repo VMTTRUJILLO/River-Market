@@ -82,7 +82,7 @@ export default function AuthPage() {
             <>
               <span className="rm-auth-kicker">MI CUENTA</span>
               <h2>¡Hola, {usuario.nombre}!</h2>
-              <p>Has iniciado sesión en esta demostración de RiverMarket.</p>
+              <p>Has iniciado sesión en  RiverMarket.</p>
               <p className="rm-auth-email">{usuario.email}</p>
               <div className="buttons mt-4">
                 {usuario.rol === 'admin' && (
@@ -236,37 +236,9 @@ export default function AuthPage() {
                   Volver al inicio de sesión
                 </button>
               )}
-              <details className="rm-demo-accounts">
-                <summary>Probar con una cuenta de demostración</summary>
-                <p className="is-size-7 my-3">
-                  Selecciona una cuenta para completar el formulario y pulsa Ingresar.
-                </p>
-                {USUARIOS_DEMO.map((cuenta) => (
-                  <div key={cuenta.id} className="rm-demo-account">
-                    <strong>{cuenta.rol === 'admin' ? 'Administrador' : 'Cliente'}</strong>
-                    <span>{cuenta.email}</span>
-                    <code>{cuenta.password}</code>
-                    <button
-                      type="button"
-                      className="button is-small is-primary is-light is-rounded"
-                      onClick={() => {
-                        cambiarModo('login')
-                        setEmail(cuenta.email)
-                        setPassword(cuenta.password)
-                      }}
-                    >
-                      Usar cuenta de {cuenta.rol === 'admin' ? 'administrador' : 'cliente'}
-                    </button>
-                  </div>
-                ))}
-              </details>
             </>
           )}
         </div>
-        <p className="rm-auth-demo-note">
-          Demostración académica: usa datos y contraseñas de prueba. Las cuentas y compras se guardan solo en
-          este navegador.
-        </p>
       </section>
     </main>
   )

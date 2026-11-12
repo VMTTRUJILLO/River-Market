@@ -3,15 +3,15 @@ export const USUARIOS_DEMO = [
   {
     id: 'demo-cliente',
     nombre: 'Valentina',
-    email: 'cliente@rivermarket.demo',
-    password: 'Cliente123!',
+    email: 'cliente@rivermarket.com',
+    password: 'Cliente123',
     rol: 'cliente',
   },
   {
     id: 'demo-admin',
     nombre: 'Administrador',
-    email: 'admin@rivermarket.demo',
-    password: 'Admin123!',
+    email: 'admin@rivermarket.com',
+    password: 'Admin123',
     rol: 'admin',
   },
 ]
