@@ -1,51 +1,75 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useRef, useState } from 'react'
+import { USUARIOS_DEMO } from '../data/usuarios'
+import { guardar, leer } from '../utils/storage'
+import { useNotificar } from './useNotificaciones'
 
-const AuthContext = createContext(null)
+import { AuthContext } from './useAuth'
 const USERS_KEY = 'rivermarket_demo_users'
 const SESSION_KEY = 'rivermarket_demo_session'
-
-const read = (key, fallback) => {
-  try { return JSON.parse(localStorage.getItem(key)) ?? fallback } catch { return fallback }
-}
+const datosPublicos = ({ id, nombre, email, rol }) => ({ id, nombre, email, rol: rol || 'cliente' })
 
 export function AuthProvider({ children }) {
-  const [users, setUsers] = useState(() => read(USERS_KEY, []))
-  const [usuario, setUsuario] = useState(() => read(SESSION_KEY, null))
-
-  useEffect(() => localStorage.setItem(USERS_KEY, JSON.stringify(users)), [users])
-  useEffect(() => {
-    if (usuario) localStorage.setItem(SESSION_KEY, JSON.stringify(usuario))
-    else localStorage.removeItem(SESSION_KEY)
-  }, [usuario])
-
+  const notificar = useNotificar()
+  const [users, setUsers] = useState(() => {
+    const anteriores = leer(USERS_KEY, [], Array.isArray).filter(
+      (u) => u && typeof u.email === 'string' && typeof u.password === 'string',
+    )
+    return [
+      ...anteriores.map((u) => ({ ...u, rol: USUARIOS_DEMO.find((d) => d.id === u.id)?.rol || 'cliente' })),
+      ...USUARIOS_DEMO.filter((d) => !anteriores.some((u) => u.email === d.email)),
+    ]
+  })
+  const usersRef = useRef(users)
+  const [usuario, setUsuario] = useState(() => {
+    const session = leer(SESSION_KEY, null)
+    const account = users.find((u) => u.id === session?.id)
+    return account ? datosPublicos(account) : null
+  })
+  const sesion = (cuenta) => {
+    const datos = cuenta ? datosPublicos(cuenta) : null
+    guardar(SESSION_KEY, datos)
+    setUsuario(datos)
+  }
+  const actualizar = (nuevos) => {
+    guardar(USERS_KEY, nuevos)
+    usersRef.current = nuevos
+    setUsers(nuevos)
+  }
   const registrar = ({ nombre, email, password }) => {
     const correo = email.trim().toLowerCase()
-    if (users.some((u) => u.email === correo)) throw new Error('Ya existe una cuenta con ese correo.')
-    const nuevo = { id: crypto.randomUUID(), nombre: nombre.trim(), email: correo, password }
-    setUsers((actuales) => [...actuales, nuevo])
-    setUsuario({ id: nuevo.id, nombre: nuevo.nombre, email: nuevo.email })
+    if (nombre.trim().length < 2) throw new Error('Escribe tu nombre completo (mínimo 2 caracteres).')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) throw new Error('Escribe un correo válido.')
+    if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.')
+    if (usersRef.current.some((u) => u.email === correo))
+      throw new Error('Ya existe una cuenta con ese correo.')
+    const nuevo = { id: crypto.randomUUID(), nombre: nombre.trim(), email: correo, password, rol: 'cliente' }
+    actualizar([...usersRef.current, nuevo])
+    sesion(nuevo)
+    notificar(`¡Cuenta creada! Bienvenido a RiverMarket, ${nuevo.nombre}.`)
   }
-
   const iniciarSesion = (email, password) => {
-    const cuenta = users.find((u) => u.email === email.trim().toLowerCase() && u.password === password)
+    const cuenta = usersRef.current.find(
+      (u) => u.email === email.trim().toLowerCase() && u.password === password,
+    )
     if (!cuenta) throw new Error('Correo o contraseña incorrectos.')
-    setUsuario({ id: cuenta.id, nombre: cuenta.nombre, email: cuenta.email })
+    sesion(cuenta)
+    notificar(`¡Hola, ${cuenta.nombre}! Iniciaste sesión correctamente.`)
   }
-
-  const cerrarSesion = () => setUsuario(null)
-
+  const cerrarSesion = () => {
+    sesion(null)
+    notificar('Cerraste sesión correctamente.')
+  }
   const restablecerPassword = (email, nuevaPassword) => {
     const correo = email.trim().toLowerCase()
-    if (!users.some((u) => u.email === correo)) throw new Error('No encontramos una cuenta con ese correo.')
-    setUsers((actuales) => actuales.map((u) => u.email === correo ? { ...u, password: nuevaPassword } : u))
+    if (nuevaPassword.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.')
+    if (!usersRef.current.some((u) => u.email === correo))
+      throw new Error('No encontramos una cuenta con ese correo.')
+    actualizar(usersRef.current.map((u) => (u.email === correo ? { ...u, password: nuevaPassword } : u)))
+    notificar('Contraseña de prueba actualizada.')
   }
-
-  const value = useMemo(() => ({ usuario, registrar, iniciarSesion, cerrarSesion, restablecerPassword }), [usuario, users])
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuth debe usarse dentro de AuthProvider')
-  return context
+  return (
+    <AuthContext.Provider value={{ usuario, registrar, iniciarSesion, cerrarSesion, restablecerPassword }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

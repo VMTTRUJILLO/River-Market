@@ -1,6 +1,29 @@
-import React from 'react'
+import { navigate } from './useRoute'
 
-// Standard anchors intentionally trigger a page navigation so direct URLs and refreshes work on static hosting.
-export function Link({ href, children, ...props }) {
-  return <a href={href} {...props}>{children}</a>
+export function Link({ href, children, onClick, ...props }) {
+  return (
+    <a
+      href={href}
+      {...props}
+      onClick={(event) => {
+        onClick?.(event)
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey ||
+          props.target ||
+          props.download
+        )
+          return
+        if (new URL(href, window.location.href).origin !== window.location.origin) return
+        event.preventDefault()
+        navigate(href)
+      }}
+    >
+      {children}
+    </a>
+  )
 }

@@ -1,3 +1,4 @@
+import { Link } from '../utils/Link'
 import { useRef } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
@@ -68,6 +69,7 @@ function Hero() {
       gsap.to('.rm-hero-card--flotante', { y: '-=13', rotation: '+=1.5', duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1, stagger: .35 })
       gsap.to('.rm-hero-spark', { scale: 1.45, opacity: .45, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, stagger: .25 })
     } else {
+      tl.progress(1)
       gsap.set('.rm-hero-card', { opacity: 1, y: 0, scale: 1 })
     }
   }, { scope: contenedor })
@@ -83,7 +85,7 @@ function Hero() {
       <div className="rm-hero-spark rm-hero-spark--dos" aria-hidden="true" />
       <div className="rm-hero-spark rm-hero-spark--tres" aria-hidden="true" />
 
-      {TARJETAS_HERO.map((tarjeta, i) => {
+      {TARJETAS_HERO.map((tarjeta) => {
         const producto = buscarProducto(tarjeta.id)
         return producto ? (
           <div key={tarjeta.id} className={`rm-hero-card rm-hero-card--flotante ${tarjeta.clase}`}>
@@ -107,8 +109,8 @@ function Hero() {
           <p className="subtitle is-4 has-text-white aparece">Productos y precios inigualables</p>
           <p className="rm-hero-support aparece">Todo lo que necesitas para tu hogar, en un solo lugar.</p>
           <div className="buttons is-centered aparece">
-            <a className="button is-warning is-medium rm-hero-cta" href="#ofertas"><strong>Ver ofertas</strong></a>
-            <a className="button is-light is-medium rm-hero-secondary" href="/recetas">Cocinar con recetas</a>
+            <Link className="button is-warning is-medium rm-hero-cta" href="#ofertas"><strong>Ver ofertas</strong></Link>
+            <Link className="button is-light is-medium rm-hero-secondary" href="/recetas">Cocinar con recetas</Link>
           </div>
           <div className="rm-hero-benefits aparece">
             <span>✦ Frescura diaria</span><span>✦ Buenos precios</span><span>✦ Compra fácil</span>
