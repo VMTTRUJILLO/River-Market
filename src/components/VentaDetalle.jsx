@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTienda } from '../context/useTienda'
-import { TRANSICIONES } from '../domain/tienda'
+import { transicionesPedido } from '../domain/seguimiento'
 import { dinero, fecha } from '../utils/format'
 import Modal from './Modal'
 import EstadoVenta from './EstadoVenta'
@@ -95,7 +95,7 @@ export default function VentaDetalle({ id, cerrar }) {
         </div>
       ) : (
         <div className="buttons mt-5">
-          {TRANSICIONES[venta.estado].map((estado) => (
+          {transicionesPedido(venta).map((estado) => (
             <button
               key={estado}
               className={`button is-rounded ${estado === 'Cancelada' ? 'is-danger is-light' : 'is-primary'}`}
@@ -103,9 +103,7 @@ export default function VentaDetalle({ id, cerrar }) {
             >
               {estado === 'Cancelada'
                 ? 'Cancelar venta'
-                : estado === 'Confirmada'
-                  ? 'Confirmar venta'
-                  : 'Marcar como entregada'}
+                : `Marcar: ${estado}`}
             </button>
           ))}
         </div>

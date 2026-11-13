@@ -1,14 +1,9 @@
+import { ESTADOS_PEDIDO, transicionesPedido } from './seguimiento.js'
 import { esImagenCatalogo } from '../data/imagenesCatalogo.js'
 import { PRODUCTOS } from '../data/productos.js'
 import { CATEGORIAS } from '../data/categorias.js'
 
-export const ESTADOS_VENTA = ['Pendiente', 'Confirmada', 'Entregada', 'Cancelada']
-export const TRANSICIONES = {
-  Pendiente: ['Confirmada', 'Cancelada'],
-  Confirmada: ['Entregada', 'Cancelada'],
-  Entregada: [],
-  Cancelada: [],
-}
+export const ESTADOS_VENTA = ESTADOS_PEDIDO
 export const TIENDAS = ['RiverMarket Centro', 'RiverMarket Norte', 'RiverMarket Sur']
 const uuid = () => crypto.randomUUID()
 const ahora = () => new Date().toISOString()
@@ -145,7 +140,7 @@ export function comprar(estado, items, usuario, entrega, solicitudId) {
     },
     items: lineas,
     total: lineas.reduce((sum, p) => sum + p.precio * p.cantidad, 0),
-    estado: 'Confirmada',
+    estado: 'Pedido recibido',
     cambios: [],
   }
   venta.cambios.push({ fecha: venta.fecha, estado: venta.estado, actor: usuario.nombre })
@@ -174,7 +169,7 @@ export function comprar(estado, items, usuario, entrega, solicitudId) {
 export function cambiarEstadoVenta(estado, id, nuevoEstado, usuario) {
   exigirAdmin(usuario)
   const venta = estado.ventas.find((v) => v.id === id)
-  if (!venta || !TRANSICIONES[venta.estado]?.includes(nuevoEstado))
+  if (!venta || !transicionesPedido(venta).includes(nuevoEstado))
     throw new Error('Este cambio de estado ya no está disponible.')
   const movimientos = []
   const productos =
@@ -260,11 +255,11 @@ export function crearDemo() {
             ...v,
             fecha,
             demo: true,
-            estado: index === 0 ? 'Entregada' : index === 1 ? 'Pendiente' : 'Confirmada',
+            estado: index === 0 ? 'Recogido' : index === 1 ? 'Pedido recibido' : 'Preparando tu mercado',
             cambios: [
               {
                 fecha,
-                estado: index === 0 ? 'Entregada' : index === 1 ? 'Pendiente' : 'Confirmada',
+                estado: index === 0 ? 'Recogido' : index === 1 ? 'Pedido recibido' : 'Preparando tu mercado',
                 actor: 'RiverMarket',
               },
             ],

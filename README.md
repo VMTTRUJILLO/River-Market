@@ -62,12 +62,12 @@ El registro inicia sesión automáticamente y crea un cliente, nunca un administ
 
 Inicia sesión como administrador y usa **Ir a administración** o el enlace **Administrar** del menú (`/admin`). El acceso de clientes al panel está bloqueado en la interfaz y en las operaciones de gestión.
 
-- **Resumen:** ingresos de ventas confirmadas/entregadas, pedidos, productos, unidades, alertas de stock bajo, ventas de los últimos siete días y pedidos recientes.
+- **Resumen:** importe de pedidos no cancelados, pedidos, productos, unidades, alertas de stock bajo, ventas de los últimos siete días y pedidos recientes.
 - **Productos:** crear, editar, eliminar, buscar, filtrar por categoría y consultar stock bajo, agotados y eliminados. La imagen es una URL HTTPS opcional. El precio se expresa en pesos enteros; el precio anterior solo aplica cuando es mayor al actual.
-- **Ventas:** buscar por pedido/cliente, filtrar estado y fechas, consultar detalle y modificar estados. Los totales filtrados excluyen ventas pendientes y canceladas.
+- **Ventas:** buscar por pedido/cliente, filtrar estado y fechas, consultar detalle y modificar estados. Los totales filtrados excluyen pedidos cancelados.
 - **Historial:** inventario inicial, altas, cambios (incluidos precio y stock), ventas, devoluciones y eliminaciones con responsable, fecha y existencias antes/después. El historial de edición conserva los valores anteriores y nuevos.
 
-Los pedidos pasan de **Pendiente → Confirmada → Entregada**. Los pendientes y confirmados pueden cancelarse con confirmación; la cancelación devuelve el stock una sola vez. Entregada y Cancelada son estados finales. Las compras nuevas se crean como Confirmadas.
+Los pedidos a domicilio pasan de **Pedido recibido → Preparando tu mercado → En camino → Entregado**. Los pedidos de recogida pasan de **Pedido recibido → Preparando tu mercado → Listo para recoger → Recogido**. En **Administración → Ventas → Ver detalle**, el administrador puede avanzar al siguiente paso. Antes del estado final se puede cancelar con confirmación; se devuelve el stock una sola vez. Los pedidos nuevos se crean como Pedido recibido. Cada cambio conserva fecha y responsable en el historial. No se permiten saltos, retrocesos ni pasos de otra modalidad.
 
 Eliminar un producto lo retira del catálogo y evita su compra, pero conserva su registro para que las ventas y el historial sigan siendo consultables. Cambiar el precio o nombre de un producto no altera las líneas de pedidos anteriores.
 
@@ -153,6 +153,6 @@ El ingreso y registro correctos redirigen al inicio con la sesión activa. El no
 
 El comprobante incluye resumen y seguimiento, con acceso directo al pedido en la cuenta. Los pedidos anteriores sin modalidad se interpretan como recogida. Administración muestra dirección, ciudad e indicaciones en los domicilios.
 
-El seguimiento es local: usa la fecha guardada del pedido, avanza a preparación a los cinco minutos y a en camino/listo para recoger a los diez. Se actualiza cada quince segundos y conserva el avance al recargar. Los pedidos pendientes no avanzan; cancelaciones y entregas de administración prevalecen. La entrega final requiere marcar el pedido como Entregada en administración. No hay GPS, transportadora, cobros ni servicio de domicilios real.
+El seguimiento refleja exclusivamente el estado guardado por administración, sin avance automático por tiempo. Los cambios se muestran en la cuenta, historial, comprobante y filtros y se sincronizan entre pestañas del mismo navegador. Los estados antiguos se migran automáticamente: Pendiente a Pedido recibido, Confirmada a Preparando tu mercado y Entregada a Entregado o Recogido según la modalidad, conservando fechas, importes, líneas e inventario. No hay GPS, transportadora, cobros ni servicio de domicilios real.
 
-Validación: `npm run lint`, `npm test` (28 pruebas) y `npm run build`. Las pruebas nuevas cubren domicilio, dirección incompleta, inventario, solicitudes repetidas, seguimiento por tiempo y estados finales.
+Validación: `npm run lint`, `npm test` (30 pruebas) y `npm run build`. Las pruebas nuevas cubren domicilio, dirección incompleta, inventario, solicitudes repetidas, transiciones por modalidad, estados finales, permisos, cancelación y migración de estados antiguos.

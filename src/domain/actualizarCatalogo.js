@@ -1,6 +1,7 @@
+import { normalizarEstado } from './seguimiento.js'
 import { IMAGENES_CATALOGO } from '../data/imagenesCatalogo.js'
 
-// Actualización idempotente: no toca fotos personalizadas, precios, stock ni pedidos.
+// Actualización idempotente: conserva fotos personalizadas, precios, stock y datos de compra.
 export function actualizarCatalogo(estado) {
   let cambio = false
   const productos = estado.productos.map((producto) => {
@@ -21,17 +22,22 @@ export function actualizarCatalogo(estado) {
   }
   const historial = estado.historial.map(limpiarMovimiento)
   const ventas = estado.ventas.map((venta) => {
-    const cambios = venta.cambios.map(limpiarMovimiento)
+    const estadoVenta = normalizarEstado(venta.estado, venta)
+    const cambios = venta.cambios.map((item) => {
+      const limpio = limpiarMovimiento(item)
+      const estado = normalizarEstado(limpio.estado, venta)
+      return estado === limpio.estado ? limpio : { ...limpio, estado }
+    })
     const cliente =
       venta.demo &&
       venta.cliente.id === 'demo-cliente' &&
       venta.cliente.email === 'cliente@rivermarket.demo'
         ? { ...venta.cliente, email: 'cliente@rivermarket.com' }
         : venta.cliente
-    if (cliente === venta.cliente && cambios.every((item, i) => item === venta.cambios[i]))
+    if (estadoVenta === venta.estado && cliente === venta.cliente && cambios.every((item, i) => item === venta.cambios[i]))
       return venta
     cambio = true
-    return { ...venta, cliente, cambios }
+    return { ...venta, estado: estadoVenta, cliente, cambios }
   })
   return cambio ? { ...estado, productos, historial, ventas } : estado
 }
