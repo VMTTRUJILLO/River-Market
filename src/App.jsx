@@ -20,6 +20,7 @@ import { useEntrada } from './utils/useEntrada'
 import { useInteracciones } from './utils/useInteracciones'
 import { navigate, useRoute } from './utils/useRoute'
 import { Link } from './utils/Link'
+import { useAuth } from './context/useAuth'
 import './pages/Catalogo.css'
 
 function HomePage({ busqueda }) {
@@ -47,6 +48,7 @@ function HomePage({ busqueda }) {
 }
 
 export default function App() {
+  const { usuario } = useAuth()
   const { path, search, hash, href } = useRoute()
   const raiz = useRef(null)
   const contenido = useRef(null)
@@ -84,7 +86,7 @@ export default function App() {
       {!auth && <Navbar />}
       <div ref={contenido}>{pagina}</div>
       {!auth && <Footer />}
-      <CarritoPanel />
+      <CarritoPanel key={usuario?.id || 'invitado'} />
     </div>
   )
 }
