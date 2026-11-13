@@ -126,3 +126,22 @@ La actualización también corrige imágenes antiguas de `localStorage` si todav
 Todas las animaciones se realizan con GSAP: entrada de páginas, formularios, ventanas y pasos del carrito, elevación y acercamiento de tarjetas, pulsación de botones, contador del carrito y respuesta al cursor en la invitación a Nutrición. Se cancelan al desmontar; se respeta `prefers-reduced-motion` y los efectos del cursor se limitan a dispositivos con puntero preciso.
 
 La interfaz usa textos de tienda y cuenta habituales. El aviso de compra simulada se conserva en la confirmación del carrito. La autenticación, recuperación de contraseña, administración y compra siguen siendo exclusivamente locales y académicas: no hay seguridad de servidor ni transacciones monetarias reales.
+
+## River, asistente de compras
+
+El botón **¿Te ayudo?** abre el chat en las páginas de la tienda y la cuenta. El administrador conserva su espacio de trabajo sin el panel del asistente.
+
+River funciona en React mediante un motor local de consultas e intenciones. No requiere backend, cuenta de IA, clave ni conexión a un modelo remoto. Una vez cargada la aplicación, las consultas al catálogo y las acciones del carrito funcionan incluso sin conexión; las fotos externas y la API nutricional mantienen sus propios requisitos de conexión. Es un asistente especializado en RiverMarket, no un modelo generativo de conversación general.
+
+Prueba estas consultas:
+
+- `Busco leche`, `¿Cuánto cuesta el fríjol cargamanto?` o `Frutas por menos de 5000`.
+- `Ver ofertas` y `Ver más` para recorrer resultados del catálogo vigente.
+- `Agrega 2 leches` o, después de consultar productos, `Agrega dos del primero`.
+- `Mi carrito`, `Mis pedidos`, `Tienda en Bogotá`, `Horarios`, `Recetas` o `Productos sin gluten`.
+
+Las tarjetas muestran precio, presentación y stock actuales; permiten agregar productos con un clic. Las cantidades se validan y se guardan en una sola operación, sin añadir parcialmente si no hay suficientes existencias. Una selección ambigua pide elegir un producto. Para quitar productos, ajustar cantidades o confirmar una compra, el asistente abre el carrito existente. Los pedidos se filtran por la cuenta activa y no se inventan datos nutricionales, productos ni respuestas ajenas a su alcance.
+
+La conversación se conserva durante la pestaña en `sessionStorage`, bajo `rivermarket_chat_v1:<ID de usuario>` o `rivermarket_chat_v1:invitado`, con un máximo de 40 mensajes. Cambiar de cuenta cierra el chat y selecciona un historial independiente. El botón Reiniciar conversación borra solo ese historial. Si el navegador impide guardar, el chat sigue funcionando en memoria. Ningún mensaje se envía a un servidor.
+
+GSAP anima la apertura, el cierre, la llegada de mensajes y el desplazamiento. Se respeta movimiento reducido, el foco vuelve al botón al cerrar con Escape y el panel se adapta al teclado móvil. Abrir el carrito cierra el chat para que los dos paneles no se superpongan.

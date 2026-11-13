@@ -1,3 +1,4 @@
+import { SUCURSALES as TIENDAS } from '../data/tiendas'
 import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -5,20 +6,7 @@ import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-const TIENDAS = [
-  { id: 'bogota',        ciudad: 'Bogotá',        nombre: 'RiverMarket Chapinero',   direccion: 'Cra. 13 # 60-25',  lat: 4.71,  lon: -74.07 },
-  { id: 'medellin',      ciudad: 'Medellín',      nombre: 'RiverMarket El Poblado',  direccion: 'Cl. 10 # 38-14',   lat: 6.25,  lon: -75.57 },
-  { id: 'cali',          ciudad: 'Cali',          nombre: 'RiverMarket Granada',     direccion: 'Av. 9N # 15-40',   lat: 3.45,  lon: -76.53 },
-  { id: 'barranquilla',  ciudad: 'Barranquilla',  nombre: 'RiverMarket Norte',       direccion: 'Cl. 84 # 52-30',   lat: 10.96, lon: -74.80 },
-  { id: 'cartagena',     ciudad: 'Cartagena',     nombre: 'RiverMarket Bocagrande',  direccion: 'Cra. 3 # 8-25',    lat: 10.39, lon: -75.48 },
-  { id: 'bucaramanga',   ciudad: 'Bucaramanga',   nombre: 'RiverMarket Cabecera',    direccion: 'Cra. 33 # 48-12',  lat: 7.12,  lon: -73.12 },
-  { id: 'pereira',       ciudad: 'Pereira',       nombre: 'RiverMarket Circunvalar', direccion: 'Av. Circunvalar # 5-60', lat: 4.81, lon: -75.69 },
-  { id: 'cucuta',        ciudad: 'Cúcuta',        nombre: 'RiverMarket Caobos',      direccion: 'Av. 0 # 12-45',    lat: 7.89,  lon: -72.51 },
-  { id: 'santamarta',    ciudad: 'Santa Marta',   nombre: 'RiverMarket Rodadero',    direccion: 'Cra. 2 # 11-20',   lat: 11.24, lon: -74.20 },
-  { id: 'pasto',         ciudad: 'Pasto',         nombre: 'RiverMarket Centro',      direccion: 'Cl. 18 # 25-10',   lat: 1.21,  lon: -77.28 },
-  { id: 'villavicencio', ciudad: 'Villavicencio', nombre: 'RiverMarket Llanos',      direccion: 'Cra. 40 # 30-15',  lat: 4.15,  lon: -73.63 },
-  { id: 'manizales',     ciudad: 'Manizales',     nombre: 'RiverMarket Cable',       direccion: 'Cra. 23 # 62-30',  lat: 5.07,  lon: -75.52 },
-]
+
 
 // Silueta aproximada de Colombia: [longitud, latitud]
 const CONTORNO = [
