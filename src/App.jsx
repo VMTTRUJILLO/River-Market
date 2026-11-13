@@ -8,6 +8,7 @@ import Tiendas from './components/Tiendas'
 import BusquedasFrecuentes from './components/BusquedasFrecuentes'
 import Footer from './components/Footer'
 import CarritoPanel from './components/CarritoPanel'
+import Asistente from './components/Asistente'
 import AuthPage from './pages/AuthPage'
 import CategoriaPage from './pages/CategoriaPage'
 import CategoriasPage from './pages/CategoriasPage'
@@ -86,7 +87,8 @@ export default function App() {
       {!auth && <Navbar />}
       <div ref={contenido}>{pagina}</div>
       {!auth && <Footer />}
-      <CarritoPanel key={usuario?.id || 'invitado'} />
+      <CarritoPanel key={`carrito:${usuario?.id || 'invitado'}`} />
+      {path !== '/admin' && <Asistente key={`chat:${usuario?.id || 'invitado'}`} />}
     </div>
   )
 }

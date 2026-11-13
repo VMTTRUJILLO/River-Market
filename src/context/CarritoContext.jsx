@@ -75,11 +75,14 @@ export function CarritoProvider({ children }) {
       return false
     }
   }
-  const agregar = (producto) => {
+  const agregar = (producto, unidades = 1) => {
     const vigente = productos.find((p) => p.id === producto.id && p.activo)
     const correcto = actualizar((actuales) => {
+      if (!Number.isSafeInteger(unidades) || unidades < 1 || unidades > 99) {
+        throw new Error('Agrega entre 1 y 99 unidades por vez.')
+      }
       const cantidad = actuales.find((i) => i.id === producto.id)?.cantidad || 0
-      if (!vigente || cantidad >= vigente.stock) {
+      if (!vigente || cantidad + unidades > vigente.stock) {
         throw new Error(
           !vigente
             ? 'Este producto ya no está disponible.'
@@ -87,11 +90,17 @@ export function CarritoProvider({ children }) {
         )
       }
       return cantidad
-        ? actuales.map((i) => (i.id === producto.id ? { ...i, cantidad: i.cantidad + 1 } : i))
-        : [...actuales, { ...vigente, cantidad: 1 }]
+        ? actuales.map((i) =>
+            i.id === producto.id ? { ...i, cantidad: i.cantidad + unidades } : i,
+          )
+        : [...actuales, { ...vigente, cantidad: unidades }]
     })
     if (!correcto) return false
-    notificar(`${vigente.nombre} se agregó a tu carrito.`)
+    notificar(
+      unidades === 1
+        ? `${vigente.nombre} se agregó a tu carrito.`
+        : `Se agregaron ${unidades} unidades de ${vigente.nombre} a tu carrito.`,
+    )
     return true
   }
   const restar = (id) =>
