@@ -1,8 +1,6 @@
 .rm-admin-page { min-height: 85vh; padding-top: 2.5rem; }
 .rm-admin-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
 .rm-eyebrow { color: var(--rm-chip-text); font-size: .7rem; font-weight: 800; letter-spacing: .14em; }
-.rm-admin-demo { display: flex; gap: .75rem; align-items: center; margin-bottom: 1.8rem; padding: .8rem 1rem; border: 1px solid #e3cda5; border-radius: 12px; }
-.rm-admin-demo p { font-size: .8rem; color: var(--rm-muted); }
 .rm-admin-nav { display: flex; gap: .5rem; border-bottom: 1px solid var(--rm-border); padding-bottom: .75rem; margin-bottom: 1.8rem; overflow-x: auto; }
 .rm-admin-nav button { display: flex; align-items: center; gap: .65rem; border: 0; background: transparent; color: var(--rm-muted); font: 700 .95rem 'Nunito', sans-serif; padding: .8rem 1.25rem; border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .rm-admin-nav button.is-active { background: #0e7c7c; color: #fff; }
@@ -70,8 +68,6 @@
   .rm-admin-header { align-items: flex-start; }
   .rm-admin-header .title { font-size: 2rem; }
   .rm-admin-header .button { font-size: .75rem; }
-  .rm-admin-demo { align-items: flex-start; }
-  .rm-admin-demo p { font-size: .7rem; }
   .rm-admin-nav button { padding: .6rem .85rem; font-size: .8rem; }
   .rm-admin-nav { gap: .1rem; }
   .rm-metrics { gap: .7rem; }

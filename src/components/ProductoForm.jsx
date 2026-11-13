@@ -1,3 +1,4 @@
+import { esImagenCatalogo } from '../data/imagenesCatalogo'
 import { useState } from 'react'
 import { CATEGORIAS } from '../data/categorias'
 import { useTienda } from '../context/useTienda'
@@ -144,7 +145,7 @@ export default function ProductoForm({ producto, cerrar }) {
           <input
             id="prod-imagen"
             className="input"
-            type="url"
+            type="text"
             name="imagen"
             maxLength={2000}
             value={form.imagen}
@@ -155,7 +156,7 @@ export default function ProductoForm({ producto, cerrar }) {
         </div>
         <div className="rm-form-preview">
           <ImagenProducto
-            src={form.imagen.startsWith('https://') ? form.imagen : ''}
+            src={form.imagen.startsWith('https://') || esImagenCatalogo(form.imagen) ? form.imagen : ''}
             alt="Vista previa del producto"
           />
           <div>

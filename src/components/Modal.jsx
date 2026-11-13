@@ -1,8 +1,10 @@
 import { useRef } from 'react'
 import { useDialog } from '../utils/useDialog'
+import { useEntrada } from '../utils/useEntrada'
 
 export default function Modal({ titulo, cerrar, children, ancho = '' }) {
   const ref = useRef(null)
+  useEntrada(ref)
   useDialog(ref, true, cerrar)
   return (
     <div className={`modal is-active rm-modal ${ancho}`}>

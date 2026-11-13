@@ -25,7 +25,6 @@ export default function VentaDetalle({ id, cerrar }) {
       <div className="rm-section-heading">
         <div>
           <EstadoVenta estado={venta.estado} />
-          {venta.demo && <span className="tag is-light ml-2">Datos de prueba</span>}
         </div>
         <span className="is-size-7">{fecha(venta.fecha)}</span>
       </div>
@@ -57,7 +56,7 @@ export default function VentaDetalle({ id, cerrar }) {
         ))}
       </ul>
       <div className="rm-cart-total my-4">
-        <span>Total simulado</span>
+        <span>Total</span>
         <strong>{dinero(venta.total)}</strong>
       </div>
       <h3 className="title is-6 mt-5 mb-3">Historial del pedido</h3>
@@ -109,9 +108,6 @@ export default function VentaDetalle({ id, cerrar }) {
           ))}
         </div>
       )}
-      <p className="is-size-7 has-text-grey mt-4">
-        Operación de demostración. No representa pagos ni devoluciones reales.
-      </p>
     </Modal>
   )
 }

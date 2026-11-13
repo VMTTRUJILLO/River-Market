@@ -5,6 +5,7 @@ import { useCarrito } from '../context/useCarrito'
 import { useAuth } from '../context/useAuth'
 import { useTienda } from '../context/useTienda'
 import { useDialog } from '../utils/useDialog'
+import { useEntrada } from '../utils/useEntrada'
 import { navigate } from '../utils/useRoute'
 import { dinero } from '../utils/format'
 import { TIENDAS } from '../domain/tienda'
@@ -27,6 +28,7 @@ export default function CarritoPanel() {
   const bloqueo = useRef(false)
   const raiz = useRef(null)
   const panel = useRef(null)
+  useEntrada(panel, [paso, abierto], '.rm-cart-checkout > *, .rm-cart-line, .rm-cart-vacio')
   const cerrar = useCallback(() => {
     cerrarCarrito()
     setPaso('carrito')
@@ -107,7 +109,7 @@ export default function CarritoPanel() {
             <div className="rm-order-success" role="status">
               <span aria-hidden="true">✓</span>
               <h3 className="title is-4">Pedido {pedido.numero}</h3>
-              <p>Tu compra simulada se completó correctamente.</p>
+              <p>Tu pedido está listo. ¡Gracias por elegirnos!</p>
             </div>
             <p className="mb-4">
               Recogida en <strong>{pedido.entrega.tienda}</strong>, a nombre de {pedido.entrega.nombre}.
@@ -123,7 +125,7 @@ export default function CarritoPanel() {
               ))}
             </ul>
             <div className="rm-cart-total mt-4">
-              <span>Total simulado</span>
+              <span>Total</span>
               <strong>{dinero(pedido.total)}</strong>
             </div>
             <p className="is-size-7 mb-5">No se realizó ningún cobro.</p>
@@ -154,7 +156,7 @@ export default function CarritoPanel() {
             </button>
             <p className="rm-eyebrow">RECOGIDA EN TIENDA · SIN COSTO</p>
             <h3 className="title is-4 mt-2">Ya casi es tuyo</h3>
-            <p className="mb-4">Confirma tus datos de prueba y revisa el pedido.</p>
+            <p className="mb-4">Confirma tus datos y revisa el pedido.</p>
             <div className="field">
               <label className="label" htmlFor="compra-nombre">
                 Nombre de quien recoge
@@ -172,7 +174,7 @@ export default function CarritoPanel() {
             </div>
             <div className="field">
               <label className="label" htmlFor="compra-telefono">
-                Teléfono de prueba
+                Teléfono
               </label>
               <input
                 id="compra-telefono"
@@ -218,7 +220,7 @@ export default function CarritoPanel() {
               <strong>{dinero(total)}</strong>
             </div>
             <p className="notification is-warning is-light is-size-7">
-              Compra de demostración. No se solicitarán datos de pago ni se realizará un cobro.
+              Compra simulada. No se solicitarán datos de pago ni se realizará un cobro.
             </p>
             {error && (
               <p className="notification is-danger is-light" role="alert">
@@ -235,7 +237,7 @@ export default function CarritoPanel() {
               className="button is-primary is-rounded is-fullwidth"
               disabled={ocupado || invalido || !items.length}
             >
-              Confirmar compra simulada
+              Confirmar compra
             </button>
           </form>
         ) : items.length === 0 ? (
@@ -300,7 +302,7 @@ export default function CarritoPanel() {
                 <span>Total</span>
                 <strong>{dinero(total)}</strong>
               </div>
-              <p className="is-size-7">Recogida sin costo · Compra simulada</p>
+              <p className="is-size-7">Recogida sin costo</p>
               <button
                 className="button is-primary is-rounded is-fullwidth"
                 onClick={continuar}

@@ -65,7 +65,7 @@ export function AuthProvider({ children }) {
     if (!usersRef.current.some((u) => u.email === correo))
       throw new Error('No encontramos una cuenta con ese correo.')
     actualizar(usersRef.current.map((u) => (u.email === correo ? { ...u, password: nuevaPassword } : u)))
-    notificar('Contraseña de prueba actualizada.')
+    notificar('Contraseña actualizada.')
   }
   return (
     <AuthContext.Provider value={{ usuario, registrar, iniciarSesion, cerrarSesion, restablecerPassword }}>

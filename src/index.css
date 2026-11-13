@@ -206,11 +206,16 @@ section[id] { scroll-margin-top: var(--bulma-navbar-height); }
 .rm-footer-bottom {
   min-height: 5.5rem;
   display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
   align-items: center;
   justify-content: center;
   padding: 1.25rem 0;
   text-align: center;
 }
+.rm-footer-bottom a { color: #c5cecf; font-size: .85rem; text-decoration: underline; text-underline-offset: 3px; }
+.rm-footer-bottom a:hover { color: #ffcf6e; }
+.rm-arrow-up-right { display: inline-block; vertical-align: -.1em; flex-shrink: 0; }
 .rm-footer-bottom p {
   margin: 0;
   color: #c5cecf;

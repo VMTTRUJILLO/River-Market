@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 import CartIcon from './CartIcon'
 import PersonIcon from './PersonIcon'
 import { useCarrito } from '../context/useCarrito'
@@ -14,6 +16,22 @@ export default function Navbar() {
   const { cantidadTotal, abrirCarrito } = useCarrito()
   const { usuario } = useAuth()
   const { path } = useRoute()
+  const insignia = useRef(null)
+  useGSAP(
+    () => {
+      const media = gsap.matchMedia()
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        if (cantidadTotal)
+          gsap.fromTo(
+            insignia.current,
+            { scale: 1.4 },
+            { scale: 1, duration: 0.55, ease: 'back.out(2)', clearProps: 'transform' },
+          )
+      })
+      return () => media.revert()
+    },
+    { dependencies: [cantidadTotal], revertOnUpdate: true },
+  )
   const enviarBusqueda = (event) => {
     event.preventDefault()
     const termino = texto.trim()
@@ -49,13 +67,18 @@ export default function Navbar() {
             ['/#ofertas', 'Ofertas'],
             ['/#productos', 'Productos'],
             ['/recetas', 'Recetas'],
+            ['/nutricion', 'Nutrición'],
           ].map(([href, texto]) => (
             <Link className="navbar-item rm-link" href={href} key={href} onClick={cerrarMenu}>
               {texto}
             </Link>
           ))}
           <div className="navbar-item has-dropdown is-hoverable">
-            <Link className="navbar-link is-arrowless rm-cat-link" href="/categorias" onClick={cerrarMenu}>
+            <Link
+              className="navbar-link is-arrowless rm-cat-link"
+              href="/categorias"
+              onClick={cerrarMenu}
+            >
               Categorías
               <span className="rm-caret" aria-hidden="true" />
             </Link>
@@ -65,7 +88,12 @@ export default function Navbar() {
               </Link>
               <hr className="navbar-divider" />
               {CATEGORIAS.map((c) => (
-                <Link key={c.id} className="navbar-item" href={`/categoria/${c.id}`} onClick={cerrarMenu}>
+                <Link
+                  key={c.id}
+                  className="navbar-item"
+                  href={`/categoria/${c.id}`}
+                  onClick={cerrarMenu}
+                >
                   {c.nombre}
                 </Link>
               ))}
@@ -124,7 +152,9 @@ export default function Navbar() {
           >
             <span className="icon is-medium rm-cart">
               <CartIcon />
-              <span className="tag is-warning is-rounded rm-badge">{cantidadTotal}</span>
+              <span ref={insignia} className="tag is-warning is-rounded rm-badge">
+                {cantidadTotal}
+              </span>
             </span>
           </button>
         </div>

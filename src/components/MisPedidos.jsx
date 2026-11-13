@@ -20,7 +20,6 @@ export default function MisPedidos({ usuario }) {
             </summary>
             <p className="is-size-7 mt-3">
               {fecha(v.fecha)}
-              {v.demo ? ' · Pedido de prueba' : ''}
             </p>
             <ul className="rm-order-lines">
               {v.items.map((i) => (
@@ -32,7 +31,7 @@ export default function MisPedidos({ usuario }) {
                 </li>
               ))}
             </ul>
-            <p className="is-size-7 mt-3">Recogida: {v.entrega.tienda}. Compra simulada, sin cobro real.</p>
+            <p className="is-size-7 mt-3">Recogida: {v.entrega.tienda}.</p>
           </details>
         ))
       )}

@@ -33,12 +33,12 @@ npm run preview
 
 ## Cuentas de prueba
 
-Ve a **Mi cuenta** (`/ingresar`). Puedes escribir los datos o abrir **Probar con una cuenta de demostración** y usar los botones para completar el formulario.
+Ve a **Mi cuenta** (`/ingresar`). Escribe las credenciales de una de estas cuentas.
 
 | Rol | Correo | Contraseña |
 | --- | --- | --- |
-| Cliente | `cliente@rivermarket.demo` | `Cliente123!` |
-| Administrador | `admin@rivermarket.demo` | `Admin123!` |
+| Cliente | `cliente@rivermarket.com` | `Cliente123` |
+| Administrador | `admin@rivermarket.com` | `Admin123` |
 
 Para demostrar el registro, selecciona **Registrarme** y usa, por ejemplo:
 
@@ -55,7 +55,7 @@ El registro inicia sesión automáticamente y crea un cliente, nunca un administ
 3. Agrega productos: aparece un aviso y se actualiza el contador. Las cantidades no pueden exceder el stock.
 4. Abre el carrito. Puedes quitar unidades, eliminar productos o vaciarlo. Si no has iniciado sesión, el acceso a compra te lleva al registro/login y permite retomar el carrito.
 5. Pulsa **Finalizar compra**, completa nombre, teléfono de prueba (por ejemplo `3001234567`) y un punto de recogida simulado. No hay costo de recogida.
-6. Pulsa **Confirmar compra simulada**. Se guarda el pedido, se descuentan existencias, se vacía el carrito y se muestra el comprobante. No se solicitan datos de tarjeta ni se cobra dinero.
+6. Pulsa **Confirmar compra**. Se guarda el pedido, se descuentan existencias, se vacía el carrito y se muestra el comprobante. No se solicitan datos de tarjeta ni se cobra dinero.
 7. En **Mi cuenta → Mis pedidos** puedes consultar tus compras, importes y estados.
 
 ## Administración
@@ -73,7 +73,7 @@ Eliminar un producto lo retira del catálogo y evita su compra, pero conserva su
 
 ## Datos y persistencia
 
-La primera visita prepara 33 productos, inventario y 3 pedidos de ejemplo identificados como **De prueba**. Hay productos con stock bajo y uno agotado para demostrar esos estados. El usuario cliente de prueba puede ver esos pedidos en su cuenta.
+La primera visita prepara 33 productos, inventario y 3 pedidos de ejemplo. Hay productos con stock bajo y uno agotado para demostrar esos estados. El usuario cliente de prueba puede ver esos pedidos en su cuenta.
 
 Todo se guarda en `localStorage` del origen actual:
 
@@ -95,3 +95,23 @@ Para reiniciar la demostración, elimina únicamente las cuatro claves anteriore
 `npm test` cubre compras, totales, descuento de stock, cantidades inválidas, prevención de solicitudes duplicadas, restricciones de administrador, validación de productos, conservación de pedidos históricos, cancelación con devolución única y consistencia del inventario inicial.
 
 También se verificaron recorridos en Chromium de búsqueda sin recarga, registro/login, compra, CRUD de productos, filtros, historial, cancelación, persistencia y diseños de escritorio y móvil.
+
+
+## Información nutricional con Open Food Facts
+
+En **Nutrición** (`/nutricion`) o desde **Conoce lo que llevas** en el inicio se consultan códigos de barras reales. Prueba `3017620422003` (crema de avellanas) o `5449000000996` (Coca-Cola Original); la ficha depende de los datos vigentes del proveedor. Incluye ingredientes, alérgenos, nutrientes por 100 g/100 ml y Nutri-Score cuando están disponibles. No se inventan datos faltantes ni se incorporan productos externos al inventario.
+
+- API pública: `https://world.openfoodfacts.org/api/v2/product/{codigo}.json`, consultada directamente con `fetch` desde React y con CORS. Sin claves, servidor, funciones remotas ni variables de entorno.
+- Solo se envía el código, nunca datos del usuario. Las peticiones se hacen al pulsar Consultar, no al escribir.
+- Caché en memoria de una hora (hasta 40 fichas), máximo 12 consultas/minuto por instancia, tiempo de espera de 12 segundos, cancelación al navegar y manejo de producto inexistente, datos incompletos, errores de red y HTTP 429. El proveedor aplica sus propios límites por IP.
+- Datos bajo ODbL; imágenes bajo CC BY-SA 3.0, con enlaces y atribución en la página. [Documentación oficial](https://openfoodfacts.github.io/openfoodfacts-server/api/).
+
+## Fotografías y movimiento
+
+Se revisaron las 33 fotografías de productos y se reemplazaron 17 imágenes rotas o incongruentes. Las sustituciones se sirven desde `public/catalogo`, con autoría, origen y licencia en `/creditos` y `src/data/imagenesCatalogo.js`. Las fotos de fríjol y queso están identificadas por sus fuentes como cargamanto y queso fresco. Las fotografías ilustran el tipo de producto, no una marca o cantidad exacta del empaque.
+
+La actualización también corrige imágenes antiguas de `localStorage` si todavía coinciden con el enlace original. Conserva imágenes personalizadas, productos, precios, existencias, ventas e historial. El formulario de administración acepta las rutas del catálogo incorporado y URLs HTTPS.
+
+Todas las animaciones se realizan con GSAP: entrada de páginas, formularios, ventanas y pasos del carrito, elevación y acercamiento de tarjetas, pulsación de botones, contador del carrito y respuesta al cursor en la invitación a Nutrición. Se cancelan al desmontar; se respeta `prefers-reduced-motion` y los efectos del cursor se limitan a dispositivos con puntero preciso.
+
+La interfaz usa textos de tienda y cuenta habituales. El aviso de compra simulada se conserva en la confirmación del carrito. La autenticación, recuperación de contraseña, administración y compra siguen siendo exclusivamente locales y académicas: no hay seguridad de servidor ni transacciones monetarias reales.

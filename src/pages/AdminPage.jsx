@@ -45,7 +45,6 @@ function TablaVentas({ ventas, seleccionar }) {
             <tr key={v.id}>
               <td>
                 <strong>{v.numero}</strong>
-                {v.demo && <small className="rm-table-subtext">De prueba</small>}
               </td>
               <td>
                 {v.cliente.nombre}
@@ -104,7 +103,7 @@ export default function AdminPage() {
             {usuario ? 'Acceso para administradores' : 'Inicia sesión para administrar'}
           </h1>
           <p className="mb-5">
-            Este espacio permite gestionar productos, inventario y ventas de demostración.
+            Este espacio permite gestionar productos, inventario y ventas.
           </p>
           <Link className="button is-primary is-rounded" href="/ingresar">
             {usuario ? 'Cambiar de cuenta' : 'Ir a iniciar sesión'}
@@ -181,13 +180,6 @@ export default function AdminPage() {
             Ver tienda →
           </Link>
         </header>
-        <div className="rm-admin-demo">
-          <span className="tag is-warning is-rounded">Demostración</span>
-          <p>
-            Productos, inventario y ventas guardados en este navegador. Todos los importes están en pesos
-            colombianos.
-          </p>
-        </div>
         <nav className="rm-admin-nav" aria-label="Secciones de administración">
           {[
             ['resumen', 'Resumen', '◫'],
@@ -741,7 +733,7 @@ export default function AdminPage() {
             )}
           </section>
         )}
-        <p className="rm-admin-footnote">RiverMarket · Administración de demostración · Hora de Colombia</p>
+        <p className="rm-admin-footnote">RiverMarket · Administración · Hora de Colombia</p>
         {modal?.tipo === 'producto' && <ProductoForm producto={modal.producto} cerrar={cerrarModal} />}
         {modal?.tipo === 'venta' && <VentaDetalle id={modal.id} cerrar={cerrarModal} />}
         {modal?.tipo === 'eliminar' && (
