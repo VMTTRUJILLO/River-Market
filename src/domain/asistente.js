@@ -211,7 +211,7 @@ export function responderAsistente(mensaje, datos, contexto = {}) {
     !/\b(pedido|pedidos)\b/.test(texto)
   )
     return respuesta(
-      'Al finalizar tu compra puedes elegir recogida en tienda sin costo. Revisa el punto de recogida en el carrito antes de confirmar.',
+      'Al finalizar tu compra puedes elegir recogida en tienda o domicilio sin costo adicional. Completa tus datos de entrega en el carrito y consulta el seguimiento desde Mi cuenta.',
       { acciones: [carrito] },
     )
   if (
@@ -318,7 +318,7 @@ export function responderAsistente(mensaje, datos, contexto = {}) {
     /\b(finalizar compra|como compro|como comprar|medios de pago|tarjeta|nequi)\b/.test(texto)
   )
     return respuesta(
-      'Revisa los productos en tu carrito y pulsa Finalizar compra. Necesitas iniciar sesión y elegir el punto de recogida. La confirmación se hace desde el carrito.',
+      'Revisa los productos en tu carrito y pulsa Finalizar compra. Necesitas iniciar sesión y elegir recogida en tienda o domicilio. La confirmación se hace desde el carrito.',
       { acciones: [carrito] },
     )
   const mas = /^(ver |mostrar |muestra )?mas[.! ]*$/.test(texto)

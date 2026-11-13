@@ -135,7 +135,7 @@ export default function Navbar() {
               Administrar
             </Link>
           )}
-          <Link className="navbar-item" href="/ingresar" onClick={cerrarMenu}>
+          <Link className="navbar-item" href={usuario ? "/cuenta" : "/ingresar"} onClick={cerrarMenu}>
             <span className="icon has-text-warning">
               <PersonIcon />
             </span>

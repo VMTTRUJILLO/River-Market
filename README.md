@@ -54,7 +54,7 @@ El registro inicia sesión automáticamente y crea un cliente, nunca un administ
 2. Explora las categorías. Las mismas tarjetas mantienen dimensiones de imagen, altura y botones alineados, también en móvil. Las imágenes que no cargan tienen un reemplazo visual.
 3. Agrega productos: aparece un aviso y se actualiza el contador. Las cantidades no pueden exceder el stock.
 4. Abre el carrito. Puedes quitar unidades, eliminar productos o vaciarlo. Si no has iniciado sesión, el acceso a compra te lleva al registro/login y permite retomar el carrito.
-5. Pulsa **Finalizar compra**, completa nombre, teléfono de prueba (por ejemplo `3001234567`) y un punto de recogida simulado. No hay costo de recogida.
+5. Pulsa **Finalizar compra**, completa nombre, teléfono de prueba (por ejemplo `3001234567`) y elige recogida en tienda o domicilio. El domicilio requiere ciudad y dirección; las indicaciones son opcionales. Ambas modalidades no tienen costo adicional.
 6. Pulsa **Confirmar compra**. Se guarda el pedido, se descuentan existencias, se vacía el carrito y se muestra el comprobante. No se solicitan datos de tarjeta ni se cobra dinero.
 7. En **Mi cuenta → Mis pedidos** puedes consultar tus compras, importes y estados.
 
@@ -125,7 +125,7 @@ La actualización también corrige imágenes antiguas de `localStorage` si todav
 
 Todas las animaciones se realizan con GSAP: entrada de páginas, formularios, ventanas y pasos del carrito, elevación y acercamiento de tarjetas, pulsación de botones, contador del carrito y respuesta al cursor en la invitación a Nutrición. Se cancelan al desmontar; se respeta `prefers-reduced-motion` y los efectos del cursor se limitan a dispositivos con puntero preciso.
 
-La interfaz usa textos de tienda y cuenta habituales. El aviso de compra simulada se conserva en la confirmación del carrito. La autenticación, recuperación de contraseña, administración y compra siguen siendo exclusivamente locales y académicas: no hay seguridad de servidor ni transacciones monetarias reales.
+La interfaz usa textos de tienda y cuenta habituales, sin avisos de simulación en el flujo de compra. La autenticación, recuperación de contraseña, administración y compra siguen siendo exclusivamente locales y académicas: no hay seguridad de servidor ni transacciones monetarias reales.
 
 ## River, asistente de compras
 
@@ -145,3 +145,14 @@ Las tarjetas muestran precio, presentación y stock actuales; permiten agregar p
 La conversación se conserva durante la pestaña en `sessionStorage`, bajo `rivermarket_chat_v1:<ID de usuario>` o `rivermarket_chat_v1:invitado`, con un máximo de 40 mensajes. Cambiar de cuenta cierra el chat y selecciona un historial independiente. El botón Reiniciar conversación borra solo ese historial. Si el navegador impide guardar, el chat sigue funcionando en memoria. Ningún mensaje se envía a un servidor.
 
 GSAP anima la apertura, el cierre, la llegada de mensajes y el desplazamiento. Se respeta movimiento reducido, el foco vuelve al botón al cerrar con Escape y el panel se adapta al teclado móvil. Abrir el carrito cierra el chat para que los dos paneles no se superpongan.
+
+
+## Cuenta, domicilio y seguimiento
+
+El ingreso y registro correctos redirigen al inicio con la sesión activa. El nombre en el menú abre `/cuenta`; `/ingresar` conserva compatibilidad para enlaces anteriores. El panel incluye datos personales, resumen, filtros, búsqueda por número, historial y detalle de cada pedido.
+
+El comprobante incluye resumen y seguimiento, con acceso directo al pedido en la cuenta. Los pedidos anteriores sin modalidad se interpretan como recogida. Administración muestra dirección, ciudad e indicaciones en los domicilios.
+
+El seguimiento es local: usa la fecha guardada del pedido, avanza a preparación a los cinco minutos y a en camino/listo para recoger a los diez. Se actualiza cada quince segundos y conserva el avance al recargar. Los pedidos pendientes no avanzan; cancelaciones y entregas de administración prevalecen. La entrega final requiere marcar el pedido como Entregada en administración. No hay GPS, transportadora, cobros ni servicio de domicilios real.
+
+Validación: `npm run lint`, `npm test` (28 pruebas) y `npm run build`. Las pruebas nuevas cubren domicilio, dirección incompleta, inventario, solicitudes repetidas, seguimiento por tiempo y estados finales.
