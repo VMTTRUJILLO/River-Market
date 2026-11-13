@@ -2,14 +2,14 @@
 export const USUARIOS_DEMO = [
   {
     id: 'demo-cliente',
-    nombre: 'Valentina',
+    nombre: 'Alejandra',
     email: 'cliente@rivermarket.com',
     password: 'Cliente123',
     rol: 'cliente',
   },
   {
     id: 'demo-admin',
-    nombre: 'Administrador',
+    nombre: 'Victor admin',
     email: 'admin@rivermarket.com',
     password: 'Admin123',
     rol: 'admin',
