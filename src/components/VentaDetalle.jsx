@@ -4,6 +4,7 @@ import { TRANSICIONES } from '../domain/tienda'
 import { dinero, fecha } from '../utils/format'
 import Modal from './Modal'
 import EstadoVenta from './EstadoVenta'
+import { destinoPedido } from '../domain/seguimiento'
 
 export default function VentaDetalle({ id, cerrar }) {
   const { ventas, cambiarEstado } = useTienda()
@@ -35,13 +36,14 @@ export default function VentaDetalle({ id, cerrar }) {
           <p>{venta.cliente.email}</p>
         </div>
         <div>
-          <p className="rm-eyebrow">RECOGIDA</p>
-          <strong>{venta.entrega.tienda}</strong>
+          <p className="rm-eyebrow">{venta.entrega.tipo === 'domicilio' ? 'DOMICILIO' : 'RECOGIDA'}</p>
+          <strong>{destinoPedido(venta)}</strong>
           <p>
             {venta.entrega.nombre} · {venta.entrega.telefono}
           </p>
         </div>
       </div>
+      {venta.entrega.indicaciones && <p>{venta.entrega.indicaciones}</p>}
       <ul className="rm-order-lines mt-4">
         {venta.items.map((i) => (
           <li key={i.id}>

@@ -10,6 +10,8 @@ import { navigate } from '../utils/useRoute'
 import { dinero } from '../utils/format'
 import { TIENDAS } from '../domain/tienda'
 import ImagenProducto from './ImagenProducto'
+import SeguimientoPedido from './SeguimientoPedido'
+import '../pages/CuentaPage.css'
 import './CarritoPanel.css'
 
 gsap.registerPlugin(useGSAP)
@@ -23,7 +25,7 @@ export default function CarritoPanel() {
   const [pedido, setPedido] = useState(null)
   const [error, setError] = useState('')
   const [ocupado, setOcupado] = useState(false)
-  const [entrega, setEntrega] = useState({ nombre: '', telefono: '', tienda: TIENDAS[0] })
+  const [entrega, setEntrega] = useState({ nombre: '', telefono: '', tipo: 'recogida', tienda: TIENDAS[0], direccion: '', ciudad: '', indicaciones: '' })
   const solicitud = useRef(null)
   const bloqueo = useRef(false)
   const raiz = useRef(null)
@@ -105,15 +107,14 @@ export default function CarritoPanel() {
           <button type="button" className="delete is-medium" aria-label="Cerrar carrito" onClick={cerrar} />
         </header>
         {paso === 'exito' && pedido ? (
-          <div className="rm-cart-checkout">
+          <div className="rm-cart-checkout rm-receipt">
             <div className="rm-order-success" role="status">
               <span aria-hidden="true">✓</span>
               <h3 className="title is-4">Pedido {pedido.numero}</h3>
-              <p>Tu pedido está listo. ¡Gracias por elegirnos!</p>
+              <p>¡Pedido confirmado! Ya estamos preparando tu mercado.</p>
             </div>
-            <p className="mb-4">
-              Recogida en <strong>{pedido.entrega.tienda}</strong>, a nombre de {pedido.entrega.nombre}.
-            </p>
+            <SeguimientoPedido pedido={pedido} />
+            <h4 className="title is-6 mt-5">Resumen de tu compra</h4>
             <ul className="rm-order-lines">
               {pedido.items.map((i) => (
                 <li key={i.id}>
@@ -128,7 +129,7 @@ export default function CarritoPanel() {
               <span>Total</span>
               <strong>{dinero(pedido.total)}</strong>
             </div>
-            <p className="is-size-7 mb-5">No se realizó ningún cobro.</p>
+            <p className="rm-receipt-note">Gracias por elegir RiverMarket. Consulta el avance de tu pedido desde tu cuenta.</p>
             <button className="button is-primary is-rounded is-fullwidth" onClick={cerrar}>
               Seguir comprando
             </button>
@@ -136,10 +137,10 @@ export default function CarritoPanel() {
               className="button is-light is-rounded is-fullwidth mt-3"
               onClick={() => {
                 cerrar()
-                navigate('/ingresar')
+                navigate('/cuenta?pedido=' + pedido.id)
               }}
             >
-              Ver mis pedidos
+              Rastrear mi pedido
             </button>
           </div>
         ) : paso === 'confirmar' && usuario ? (
@@ -189,22 +190,12 @@ export default function CarritoPanel() {
                 onChange={(e) => setEntrega({ ...entrega, telefono: e.target.value })}
               />
             </div>
-            <div className="field">
-              <label className="label" htmlFor="compra-tienda">
-                Punto de recogida
-              </label>
-              <div className="select is-fullwidth">
-                <select
-                  id="compra-tienda"
-                  value={entrega.tienda}
-                  onChange={(e) => setEntrega({ ...entrega, tienda: e.target.value })}
-                >
-                  {TIENDAS.map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            <fieldset className="rm-delivery-choice"><legend>¿Cómo quieres recibir tu mercado?</legend>{[['recogida','Recoger en tienda'],['domicilio','Enviar a domicilio']].map(([tipo, texto]) => <label key={tipo} className={entrega.tipo === tipo ? 'selected' : ''}><input type="radio" name="tipo-entrega" value={tipo} checked={entrega.tipo === tipo} onChange={() => setEntrega({ ...entrega, tipo })} /><strong>{texto}</strong><small>Sin costo adicional</small></label>)}</fieldset>
+            {entrega.tipo === 'recogida' ? <div className="field"><label className="label" htmlFor="compra-tienda">Punto de recogida</label><div className="select is-fullwidth"><select id="compra-tienda" value={entrega.tienda} onChange={e=>setEntrega({...entrega,tienda:e.target.value})}>{TIENDAS.map(t=><option key={t}>{t}</option>)}</select></div></div> : <div className="rm-delivery-fields">
+              <label className="label">Ciudad<input className="input" required maxLength={80} autoComplete="address-level2" value={entrega.ciudad} onChange={e=>setEntrega({...entrega,ciudad:e.target.value})}/></label>
+              <label className="label">Dirección de entrega<input className="input" required minLength={8} maxLength={180} autoComplete="street-address" placeholder="Calle, número, edificio y apartamento" value={entrega.direccion} onChange={e=>setEntrega({...entrega,direccion:e.target.value})}/></label>
+              <label className="label">Indicaciones adicionales (opcional)<textarea className="textarea" rows={2} maxLength={240} value={entrega.indicaciones} onChange={e=>setEntrega({...entrega,indicaciones:e.target.value})}/></label>
+            </div>}
             <ul className="rm-order-lines mt-5">
               {items.map((i) => (
                 <li key={i.id}>
@@ -220,7 +211,7 @@ export default function CarritoPanel() {
               <strong>{dinero(total)}</strong>
             </div>
             <p className="notification is-warning is-light is-size-7">
-              Compra simulada. No se solicitarán datos de pago ni se realizará un cobro.
+              Revisa tus productos y datos de entrega antes de confirmar tu pedido.
             </p>
             {error && (
               <p className="notification is-danger is-light" role="alert">
@@ -302,7 +293,7 @@ export default function CarritoPanel() {
                 <span>Total</span>
                 <strong>{dinero(total)}</strong>
               </div>
-              <p className="is-size-7">Recogida sin costo</p>
+              <p className="is-size-7">Recogida o domicilio sin costo adicional</p>
               <button
                 className="button is-primary is-rounded is-fullwidth"
                 onClick={continuar}

@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import CarritoPanel from './components/CarritoPanel'
 import Asistente from './components/Asistente'
 import AuthPage from './pages/AuthPage'
+import CuentaPage from './pages/CuentaPage'
 import CategoriaPage from './pages/CategoriaPage'
 import CategoriasPage from './pages/CategoriasPage'
 import RecetasPage from './pages/RecetasPage'
@@ -56,7 +57,7 @@ export default function App() {
   const ruta = path + '?' + search.toString()
   useEntrada(contenido, [ruta])
   useInteracciones(raiz, ruta)
-  const auth = path === '/ingresar'
+  const auth = (path === '/ingresar' || path === '/cuenta') && !usuario
   useEffect(() => {
     document.documentElement.classList.toggle('has-navbar-fixed-top', !auth)
     const frame = requestAnimationFrame(() => {
@@ -67,7 +68,7 @@ export default function App() {
     return () => cancelAnimationFrame(frame)
   }, [href, auth, hash])
   let pagina
-  if (auth) pagina = <AuthPage />
+  if (path === '/ingresar' || path === '/cuenta') pagina = usuario ? <CuentaPage /> : <AuthPage />
   else if (path === '/admin') pagina = <AdminPage />
   else if (path === '/recetas') pagina = <RecetasPage />
   else if (path === '/nutricion') pagina = <NutricionPage />

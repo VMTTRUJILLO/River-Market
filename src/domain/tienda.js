@@ -109,12 +109,11 @@ export function comprar(estado, items, usuario, entrega, solicitudId) {
   const existente = estado.ventas.find((v) => v.solicitudId === solicitudId)
   if (existente) return { estado, venta: existente }
   if (!solicitudId || !items.length) throw new Error('Tu carrito está vacío.')
-  if (
-    !entrega?.nombre?.trim() ||
-    !/^[\d\s+()-]{7,20}$/.test(entrega.telefono || '') ||
-    !TIENDAS.includes(entrega.tienda)
-  )
-    throw new Error('Completa tu nombre, teléfono y punto de recogida.')
+  const tipo = entrega?.tipo || 'recogida'
+  if (!entrega?.nombre?.trim() || entrega.nombre.trim().length > 100 || !/^[\d\s+()-]{7,20}$/.test(entrega.telefono || '')) throw new Error('Completa tu nombre y teléfono.')
+  if (!['recogida', 'domicilio'].includes(tipo)) throw new Error('Selecciona una forma de entrega válida.')
+  if (tipo === 'recogida' && !TIENDAS.includes(entrega.tienda)) throw new Error('Selecciona un punto de recogida.')
+  if (tipo === 'domicilio' && (!entrega.direccion?.trim() || entrega.direccion.trim().length < 8 || entrega.direccion.length > 180 || !entrega.ciudad?.trim() || entrega.ciudad.length > 80 || (entrega.indicaciones || '').length > 240)) throw new Error('Completa la ciudad y una dirección de entrega válida.')
   const ids = new Set()
   const lineas = items.map((item) => {
     if (ids.has(item.id)) throw new Error('El carrito contiene una línea duplicada.')
@@ -141,7 +140,9 @@ export function comprar(estado, items, usuario, entrega, solicitudId) {
     solicitudId,
     fecha: ahora(),
     cliente: { id: usuario.id, nombre: usuario.nombre, email: usuario.email },
-    entrega: { nombre: entrega.nombre.trim(), telefono: entrega.telefono.trim(), tienda: entrega.tienda },
+    entrega: { nombre: entrega.nombre.trim(), telefono: entrega.telefono.trim(), tipo,
+      ...(tipo === 'recogida' ? { tienda: entrega.tienda } : { direccion: entrega.direccion.trim(), ciudad: entrega.ciudad.trim(), indicaciones: (entrega.indicaciones || '').trim() }),
+    },
     items: lineas,
     total: lineas.reduce((sum, p) => sum + p.precio * p.cantidad, 0),
     estado: 'Confirmada',

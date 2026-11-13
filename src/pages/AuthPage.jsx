@@ -1,14 +1,12 @@
 import { useRef, useState } from 'react'
 import { useEntrada } from '../utils/useEntrada'
 import { useAuth } from '../context/useAuth'
-import { useCarrito } from '../context/useCarrito'
 import { Link } from '../utils/Link'
 import { navigate, useRoute } from '../utils/useRoute'
-import MisPedidos from '../components/MisPedidos'
+import CuentaPage from './CuentaPage'
 import './AuthPage.css'
 
 export default function AuthPage() {
-  const { abrirCarrito } = useCarrito()
   const { search } = useRoute()
   const continuarCompra = search.get('continuar') === 'compra'
   const [modo, setModo] = useState('login')
@@ -18,7 +16,7 @@ export default function AuthPage() {
   const [confirmar, setConfirmar] = useState('')
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
-  const { usuario, registrar, iniciarSesion, cerrarSesion, restablecerPassword } = useAuth()
+  const { usuario, registrar, iniciarSesion, restablecerPassword } = useAuth()
   const tarjeta = useRef(null)
   useEntrada(
     tarjeta,
@@ -42,10 +40,10 @@ export default function AuthPage() {
         if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.')
         if (password !== confirmar) throw new Error('Las contraseñas no coinciden.')
         registrar({ nombre, email, password })
-        setMensaje('¡Tu cuenta fue creada y ya iniciaste sesión!')
+        navigate('/', { replace: true })
       } else if (modo === 'login') {
         iniciarSesion(email, password)
-        setMensaje('¡Bienvenido de nuevo a RiverMarket!')
+        navigate('/', { replace: true })
       } else {
         if (password.length < 8)
           throw new Error('La nueva contraseña debe tener al menos 8 caracteres.')
@@ -90,49 +88,7 @@ export default function AuthPage() {
             </p>
           )}
           {usuario ? (
-            <>
-              <span className="rm-auth-kicker">MI CUENTA</span>
-              <h2>¡Hola, {usuario.nombre}!</h2>
-              <p>Has iniciado sesión en RiverMarket.</p>
-              <p className="rm-auth-email">{usuario.email}</p>
-              <div className="buttons mt-4">
-                {usuario.rol === 'admin' && (
-                  <Link className="button is-primary is-rounded" href="/admin">
-                    Ir a administración
-                  </Link>
-                )}
-                <button
-                  className="button is-warning is-rounded"
-                  onClick={() => {
-                    navigate('/')
-                    if (continuarCompra) abrirCarrito()
-                  }}
-                >
-                  {continuarCompra ? 'Continuar mi compra' : 'Ir a comprar'}
-                </button>
-                <button
-                  className="button is-light is-rounded"
-                  onClick={() => {
-                    try {
-                      cerrarSesion()
-                      setMensaje('')
-                      setPassword('')
-                      setEmail('')
-                    } catch (err) {
-                      setError(err.message)
-                    }
-                  }}
-                >
-                  Cerrar sesión
-                </button>
-              </div>
-              {error && (
-                <p className="rm-auth-alert error" role="alert">
-                  {error}
-                </p>
-              )}
-              <MisPedidos usuario={usuario} />
-            </>
+            <CuentaPage />
           ) : (
             <>
               <span className="rm-auth-kicker">
