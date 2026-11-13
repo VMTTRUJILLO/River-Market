@@ -24,3 +24,20 @@
   .rm-search { max-width: none; margin: .5rem 0; }
   .rm-navbar .navbar-end { display: flex; align-items: center; flex-wrap: wrap; }
 }
+/* El menú conserva espacio para Nutrición y la cuenta en pantallas intermedias. */
+@media (min-width: 1024px) and (max-width: 1215px) {
+  .navbar.rm-navbar { display: flex; flex-wrap: wrap; }
+  .rm-navbar .navbar-brand { width: 100%; }
+  .rm-navbar .navbar-burger { display: block; }
+  .rm-navbar .navbar-menu { display: none; width: 100%; background: var(--rm-ink); max-height: calc(100dvh - 4rem); overflow-y: auto; }
+  .rm-navbar .navbar-menu.is-active { display: block; }
+  .rm-navbar .navbar-start { display: block; }
+  .rm-navbar .navbar-end { display: flex; align-items: center; flex-wrap: wrap; }
+  .rm-navbar .navbar-dropdown { display: none; }
+  .rm-navbar .navbar-link { padding-left: .75rem; }
+  .rm-search { max-width: none; margin: .5rem 0; }
+}
+@media (min-width: 1216px) and (max-width: 1407px) {
+  .rm-navbar .navbar-item, .rm-navbar .navbar-link { padding-inline: .55rem; }
+  .rm-navbar .rm-user-name { max-width: 5rem; }
+}

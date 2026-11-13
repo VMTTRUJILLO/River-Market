@@ -1,3 +1,4 @@
+import { esImagenCatalogo } from '../data/imagenesCatalogo.js'
 import { PRODUCTOS } from '../data/productos.js'
 import { CATEGORIAS } from '../data/categorias.js'
 
@@ -51,7 +52,7 @@ export function validarProducto(datos) {
   entero(producto.precioAntes, 0, 'El precio anterior debe ser cero o un entero positivo.')
   if (producto.precioAntes && producto.precioAntes <= producto.precio)
     throw new Error('El precio anterior debe ser mayor al precio de venta; déjalo vacío si no hay oferta.')
-  if (producto.imagen) {
+  if (producto.imagen && !esImagenCatalogo(producto.imagen)) {
     try {
       if (new URL(producto.imagen).protocol !== 'https:') throw new Error()
     } catch {
@@ -218,12 +219,12 @@ export function crearDemo() {
     ventas: [],
     siguienteVenta: 1,
     historial: productos.map((p) =>
-      movimiento(p, 'Inventario inicial', 0, 'Datos de prueba', {
-        nota: 'Existencias iniciales de demostración',
+      movimiento(p, 'Inventario inicial', 0, 'RiverMarket', {
+        nota: 'Inventario inicial',
       }),
     ),
   }
-  const cliente = { id: 'demo-cliente', nombre: 'Valentina', email: 'cliente@rivermarket.demo' }
+  const cliente = { id: 'demo-cliente', nombre: 'Valentina', email: 'cliente@rivermarket.com' }
   const ejemplos = [
     [
       ['leche', 2],
@@ -263,14 +264,14 @@ export function crearDemo() {
               {
                 fecha,
                 estado: index === 0 ? 'Entregada' : index === 1 ? 'Pendiente' : 'Confirmada',
-                actor: 'Datos de prueba',
+                actor: 'RiverMarket',
               },
             ],
           }
         : v,
     )
     estado.historial = estado.historial.map((m) =>
-      m.ventaId === compra.venta.id ? { ...m, fecha, actor: 'Datos de prueba' } : m,
+      m.ventaId === compra.venta.id ? { ...m, fecha, actor: 'RiverMarket' } : m,
     )
   })
   const apertura = new Date(Date.now() - 4 * 86400000).toISOString()

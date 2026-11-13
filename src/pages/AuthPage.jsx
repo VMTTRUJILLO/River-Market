@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useEntrada } from '../utils/useEntrada'
 import { useAuth } from '../context/useAuth'
 import { useCarrito } from '../context/useCarrito'
-import { USUARIOS_DEMO } from '../data/usuarios'
 import { Link } from '../utils/Link'
 import { navigate, useRoute } from '../utils/useRoute'
 import MisPedidos from '../components/MisPedidos'
@@ -19,6 +19,12 @@ export default function AuthPage() {
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
   const { usuario, registrar, iniciarSesion, cerrarSesion, restablecerPassword } = useAuth()
+  const tarjeta = useRef(null)
+  useEntrada(
+    tarjeta,
+    [modo, usuario?.id],
+    ':scope > h2, :scope > p, .rm-auth-tabs, form > label, .rm-auth-submit, .buttons',
+  )
 
   const cambiarModo = (nuevo) => {
     setModo(nuevo)
@@ -36,12 +42,13 @@ export default function AuthPage() {
         if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres.')
         if (password !== confirmar) throw new Error('Las contraseñas no coinciden.')
         registrar({ nombre, email, password })
-        setMensaje('¡Tu cuenta de demostración fue creada y ya iniciaste sesión!')
+        setMensaje('¡Tu cuenta fue creada y ya iniciaste sesión!')
       } else if (modo === 'login') {
         iniciarSesion(email, password)
         setMensaje('¡Bienvenido de nuevo a RiverMarket!')
       } else {
-        if (password.length < 8) throw new Error('La nueva contraseña debe tener al menos 8 caracteres.')
+        if (password.length < 8)
+          throw new Error('La nueva contraseña debe tener al menos 8 caracteres.')
         if (password !== confirmar) throw new Error('Las contraseñas no coinciden.')
         restablecerPassword(email, password)
         setMensaje('Contraseña actualizada. Ya puedes iniciar sesión con ella.')
@@ -64,7 +71,11 @@ export default function AuthPage() {
           <span className="rm-auth-kicker">FRESCO · LOCAL · CERCA DE TI</span>
           <h1>Todo lo que tu hogar necesita, en un solo lugar.</h1>
           <p>Compra fácil, descubre productos frescos y disfruta precios que fluyen a tu favor.</p>
-          <div className="rm-auth-photo" role="img" aria-label="Canasta con frutas y verduras frescas" />
+          <div
+            className="rm-auth-photo"
+            role="img"
+            aria-label="Canasta con frutas y verduras frescas"
+          />
         </div>
         <span className="rm-auth-visual-foot">Tu mercado de confianza, a un clic.</span>
       </section>
@@ -72,7 +83,7 @@ export default function AuthPage() {
         <Link href="/" className="rm-auth-back">
           ← Volver a RiverMarket
         </Link>
-        <div className="rm-auth-card">
+        <div className="rm-auth-card" ref={tarjeta}>
           {mensaje && (
             <p className="rm-auth-alert success" role="status">
               {mensaje}
@@ -82,7 +93,7 @@ export default function AuthPage() {
             <>
               <span className="rm-auth-kicker">MI CUENTA</span>
               <h2>¡Hola, {usuario.nombre}!</h2>
-              <p>Has iniciado sesión en  RiverMarket.</p>
+              <p>Has iniciado sesión en RiverMarket.</p>
               <p className="rm-auth-email">{usuario.email}</p>
               <div className="buttons mt-4">
                 {usuario.rol === 'admin' && (
@@ -142,11 +153,14 @@ export default function AuthPage() {
                 {modo === 'registro'
                   ? 'Regístrate y empieza a llenar tu carrito.'
                   : modo === 'recuperar'
-                    ? 'Escribe tu correo y define una nueva contraseña para esta cuenta de prueba.'
+                    ? 'Escribe tu correo y define una nueva contraseña para tu cuenta.'
                     : 'Ingresa para disfrutar una experiencia de compra más personal.'}
               </p>
               <div className="rm-auth-tabs">
-                <button className={modo === 'login' ? 'active' : ''} onClick={() => cambiarModo('login')}>
+                <button
+                  className={modo === 'login' ? 'active' : ''}
+                  onClick={() => cambiarModo('login')}
+                >
                   Iniciar sesión
                 </button>
                 <button
@@ -214,7 +228,11 @@ export default function AuthPage() {
                   </label>
                 )}
                 {modo === 'login' && (
-                  <button type="button" className="rm-auth-forgot" onClick={() => cambiarModo('recuperar')}>
+                  <button
+                    type="button"
+                    className="rm-auth-forgot"
+                    onClick={() => cambiarModo('recuperar')}
+                  >
                     ¿Olvidaste tu contraseña?
                   </button>
                 )}

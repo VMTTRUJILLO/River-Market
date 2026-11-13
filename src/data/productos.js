@@ -1,6 +1,8 @@
+import { IMAGENES_CATALOGO } from './imagenesCatalogo.js'
+
 const foto = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=700&q=85`
 
-export const PRODUCTOS = [
+const BASE = [
   { id:'banano', nombre:'Banano criollo', presentacion:'Kilo', precio:3200, precioAntes:4200, categoria:'frutas-verduras', imagen:foto('photo-1571771894821-ce9b6c11b08e') },
   { id:'tomate', nombre:'Tomate chonto', presentacion:'Kilo', precio:4800, precioAntes:5900, categoria:'frutas-verduras', imagen:foto('photo-1546094096-0df4bcaaa337') },
   { id:'zanahoria', nombre:'Zanahoria', presentacion:'Kilo', precio:2900, precioAntes:3600, categoria:'frutas-verduras', imagen:foto('photo-1445282768818-728615cc910a') },
@@ -35,5 +37,10 @@ export const PRODUCTOS = [
   { id:'gato', nombre:'Alimento para gato', presentacion:'Bolsa 1 kg', precio:12900, precioAntes:14900, categoria:'mascotas', imagen:foto('photo-1582798358481-d199fb7347bb') },
   { id:'arena', nombre:'Arena para gatos', presentacion:'Bolsa 4 kg', precio:15900, precioAntes:18500, categoria:'mascotas', imagen:foto('photo-1601758228041-f3b2795255f1') },
 ]
+
+export const PRODUCTOS = BASE.map((producto) => ({
+  ...producto,
+  imagen: IMAGENES_CATALOGO.find((foto) => foto.id === producto.id)?.actual || producto.imagen,
+}))
 
 export const PRODUCTOS_DESTACADOS = PRODUCTOS.filter((p) => ['banano','leche','huevos','pan','tomate','queso','zanahoria','carne'].includes(p.id))

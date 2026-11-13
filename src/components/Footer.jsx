@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '../utils/Link'
 const REDES_SOCIALES = [
   {
     nombre: 'Instagram',
@@ -55,6 +56,7 @@ function Footer() {
         <hr className="rm-footer-linea" />
         <div className="rm-footer-bottom">
           <p>© {ano} RiverMarket · Todos los derechos reservados</p>
+          <Link href="/creditos">Créditos de fotografía</Link>
         </div>
       </div>
     </footer>

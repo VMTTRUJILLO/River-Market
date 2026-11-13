@@ -8,6 +8,7 @@ import {
   cambiarEstadoVenta,
 } from '../domain/tienda'
 import { guardar, leer } from '../utils/storage'
+import { actualizarCatalogo } from '../domain/actualizarCatalogo'
 import { useAuth } from './useAuth'
 import { useNotificar } from './useNotificaciones'
 
@@ -17,7 +18,9 @@ const KEY = 'rivermarket_tienda_v1'
 export function TiendaProvider({ children }) {
   const { usuario } = useAuth()
   const notificar = useNotificar()
-  const [estado, setEstado] = useState(() => leer(KEY, null, esEstadoValido) || crearDemo())
+  const [estado, setEstado] = useState(() =>
+    actualizarCatalogo(leer(KEY, null, esEstadoValido) || crearDemo()),
+  )
   const ref = useRef(estado)
   const actualizar = useCallback((value) => {
     ref.current = value
@@ -25,19 +28,20 @@ export function TiendaProvider({ children }) {
   }, [])
   useEffect(() => {
     try {
-      if (!leer(KEY, null, esEstadoValido)) guardar(KEY, ref.current)
+      const guardado = leer(KEY, null, esEstadoValido)
+      if (!guardado || actualizarCatalogo(guardado) !== guardado) guardar(KEY, ref.current)
     } catch (error) {
       notificar(error.message, 'error')
     }
     const sincronizar = (event) => {
-      if (event.key === KEY) actualizar(leer(KEY, ref.current, esEstadoValido))
+      if (event.key === KEY) actualizar(actualizarCatalogo(leer(KEY, ref.current, esEstadoValido)))
     }
     window.addEventListener('storage', sincronizar)
     return () => window.removeEventListener('storage', sincronizar)
   }, [actualizar, notificar])
   const transaccion = (operacion) => {
     // Se relee antes de cada operación para respetar cambios de otra pestaña.
-    const vigente = leer(KEY, ref.current, esEstadoValido)
+    const vigente = actualizarCatalogo(leer(KEY, ref.current, esEstadoValido))
     let resultado
     try {
       resultado = operacion(vigente)
@@ -64,7 +68,7 @@ export function TiendaProvider({ children }) {
       venta = resultado.venta
       return resultado.estado
     })
-    notificar(`¡Compra simulada realizada! Tu pedido es ${venta.numero}.`)
+    notificar(`¡Compra realizada! Tu pedido es ${venta.numero}.`)
     return venta
   }
   const cambiarEstado = (id, nuevoEstado) => {
