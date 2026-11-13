@@ -82,17 +82,28 @@ Todo se guarda en `localStorage` del origen actual:
 | `rivermarket_tienda_v1` | Productos, stock, ventas e historial en un solo documento |
 | `rivermarket_demo_users` | Usuarios de demostración y contraseñas de prueba |
 | `rivermarket_demo_session` | Sesión de demostración |
-| `rivermarket_carrito` | Carrito |
+| `rivermarket_carritos_v2` | Carritos separados por ID de usuario y un carrito de visitante |
 
-El catálogo y las ventas se actualizan entre pestañas del mismo origen. Antes de confirmar una compra se vuelven a validar precio y disponibilidad. Esta simulación no ofrece transacciones entre dispositivos o concurrencia real de un servidor.
+El catálogo, las ventas, la sesión y los carritos se actualizan entre pestañas del mismo origen. Antes de confirmar una compra se vuelven a validar precio y disponibilidad. Esta simulación no ofrece transacciones entre dispositivos o concurrencia real de un servidor.
 
 **Usa únicamente datos ficticios.** Las contraseñas y los roles son locales y pueden inspeccionarse o modificarse desde las herramientas del navegador; no constituyen autenticación segura para producción. No hay sincronización entre navegadores o dispositivos. Las fotografías y fuentes originales necesitan conexión a internet.
 
-Para reiniciar la demostración, elimina únicamente las cuatro claves anteriores en las herramientas de almacenamiento del navegador y recarga. Esto borra las cuentas, compras y cambios locales de prueba. También puedes usar una ventana privada para una demostración independiente.
+Para reiniciar la demostración, elimina las cuatro claves anteriores y, si existe, la antigua clave `rivermarket_carrito` en las herramientas de almacenamiento del navegador y recarga. Esto borra las cuentas, compras y cambios locales de prueba. También puedes usar una ventana privada para una demostración independiente.
+
+
+### Carrito de cada cuenta
+
+Cada cuenta conserva sus productos bajo su ID estable. Al cerrar sesión se cierra el panel, se limpian los datos de la compra pendiente y el visitante ve un carrito vacío. Al volver a iniciar sesión se recupera únicamente el carrito de esa cuenta, también después de recargar. Vaciarlo o finalizar una compra no modifica los carritos de otras cuentas.
+
+Se puede seguir agregando productos como visitante. Al iniciar sesión o registrarse, esos productos se incorporan una sola vez al carrito de la cuenta elegida; los repetidos suman cantidades en una sola línea. Si las cantidades superan el stock vigente, el carrito pide ajustarlas antes de comprar. La sesión y el carrito se sincronizan entre pestañas del mismo navegador.
+
+Al actualizar desde la versión anterior, el carrito global se recupera para la cuenta que tenga una sesión activa. Si no hay sesión, no se puede identificar su propietario: se conserva la antigua clave como respaldo, pero no se muestra ni se entrega a la siguiente cuenta que entre. Una vez creado `rivermarket_carritos_v2`, la aplicación no vuelve a importar ese respaldo.
 
 ## Validación
 
 `npm test` cubre compras, totales, descuento de stock, cantidades inválidas, prevención de solicitudes duplicadas, restricciones de administrador, validación de productos, conservación de pedidos históricos, cancelación con devolución única y consistencia del inventario inicial.
+
+Las pruebas de carritos cubren aislamiento entre cuentas, cierre y recuperación de sesión, incorporación del visitante sin duplicados, vaciado independiente, registro, migración y rechazo de datos corruptos.
 
 También se verificaron recorridos en Chromium de búsqueda sin recarga, registro/login, compra, CRUD de productos, filtros, historial, cancelación, persistencia y diseños de escritorio y móvil.
 
