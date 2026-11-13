@@ -126,7 +126,9 @@ test('cancelar devuelve stock exactamente una vez y los estados finales no se re
   assert.equal(cancelado.historial[0].tipo, 'Devolución')
   assert.throws(() => cambiarEstadoVenta(cancelado, venta.id, 'Cancelada', admin), /no está disponible/)
   assert.throws(() => cambiarEstadoVenta(cancelado, venta.id, 'Confirmada', admin), /no está disponible/)
-  const entregado = cambiarEstadoVenta(estado, venta.id, 'Entregada', admin)
+  const preparando = cambiarEstadoVenta(estado, venta.id, 'Preparando tu mercado', admin)
+  const listo = cambiarEstadoVenta(preparando, venta.id, 'Listo para recoger', admin)
+  const entregado = cambiarEstadoVenta(listo, venta.id, 'Recogido', admin)
   assert.throws(() => cambiarEstadoVenta(entregado, venta.id, 'Cancelada', admin), /no está disponible/)
 })
 

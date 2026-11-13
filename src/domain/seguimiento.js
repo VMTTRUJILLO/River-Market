@@ -1,9 +1,31 @@
-export function seguimiento(pedido, tiempo = Date.now()) {
+export const ESTADOS_PEDIDO = [
+  'Pedido recibido', 'Preparando tu mercado', 'En camino', 'Listo para recoger',
+  'Entregado', 'Recogido', 'Cancelada',
+]
+
+export function pasosPedido(pedido) {
   const domicilio = pedido.entrega.tipo === 'domicilio'
-  const pasos = ['Pedido recibido', 'Preparando tu mercado', domicilio ? 'En camino' : 'Listo para recoger', domicilio ? 'Entregado' : 'Recogido']
-  const minutos = Math.max(0, (tiempo - Date.parse(pedido.fecha)) / 60000)
-  const indice = pedido.estado === 'Entregada' ? 3 : pedido.estado === 'Pendiente' ? 0 : Math.min(2, Math.floor(minutos / 5))
-  return { pasos, indice, cancelado: pedido.estado === 'Cancelada' }
+  return ['Pedido recibido', 'Preparando tu mercado', domicilio ? 'En camino' : 'Listo para recoger', domicilio ? 'Entregado' : 'Recogido']
 }
+
+// Compatibilidad con pedidos e historial guardados antes del nuevo flujo.
+export function normalizarEstado(estado, pedido) {
+  return ({ Pendiente: 'Pedido recibido', Confirmada: 'Preparando tu mercado', Entregada: pasosPedido(pedido)[3] })[estado] || estado
+}
+
+export const pedidoFinalizado = (pedido) => ['Entregado', 'Recogido', 'Cancelada'].includes(normalizarEstado(pedido.estado, pedido))
+
+export function transicionesPedido(pedido) {
+  const pasos = pasosPedido(pedido)
+  const indice = pasos.indexOf(normalizarEstado(pedido.estado, pedido))
+  return indice >= 0 && indice < 3 ? [pasos[indice + 1], 'Cancelada'] : []
+}
+
+export function seguimiento(pedido) {
+  const pasos = pasosPedido(pedido)
+  const estado = normalizarEstado(pedido.estado, pedido)
+  return { pasos, indice: Math.max(0, pasos.indexOf(estado)), cancelado: estado === 'Cancelada' }
+}
+
 export const destinoPedido = (pedido) => pedido.entrega.tipo === 'domicilio'
   ? pedido.entrega.direccion + ', ' + pedido.entrega.ciudad : pedido.entrega.tienda

@@ -12,7 +12,7 @@ import EstadoVenta from '../components/EstadoVenta'
 import ImagenProducto from '../components/ImagenProducto'
 import './AdminPage.css'
 
-const cobrada = (venta) => ['Confirmada', 'Entregada'].includes(venta.estado)
+const cobrada = (venta) => venta.estado !== 'Cancelada'
 const sumaVentas = (ventas) => ventas.filter(cobrada).reduce((sum, v) => sum + v.total, 0)
 const categoriaNombre = (id) => CATEGORIAS.find((c) => c.id === id)?.nombre || id
 function SinDatos({ texto = 'No hay registros que coincidan con los filtros.' }) {
@@ -204,14 +204,14 @@ export default function AdminPage() {
           <>
             <section className="rm-metrics" aria-label="Resumen de la tienda">
               <article className="box rm-metric rm-metric-featured">
-                <p>Ventas confirmadas</p>
+                <p>Ventas registradas</p>
                 <strong>{dinero(sumaVentas(ventas))}</strong>
-                <small>Confirmadas y entregadas · Total histórico</small>
+                <small>Pedidos no cancelados · Total histórico</small>
               </article>
               <article className="box rm-metric">
                 <p>Pedidos recibidos</p>
                 <strong>{ventas.length}</strong>
-                <small>{ventas.filter((v) => v.estado === 'Pendiente').length} pendientes de confirmar</small>
+                <small>{ventas.filter((v) => v.estado === 'Pedido recibido').length} por preparar</small>
               </article>
               <article className="box rm-metric">
                 <p>Productos en catálogo</p>
@@ -233,7 +233,7 @@ export default function AdminPage() {
                   <div className="rm-section-heading">
                     <div>
                       <h2 className="title is-5 mb-2">Ventas de la semana</h2>
-                      <p className="is-size-7 has-text-grey">Últimos 7 días · Confirmadas y entregadas</p>
+                      <p className="is-size-7 has-text-grey">Últimos 7 días · Pedidos no cancelados</p>
                     </div>
                     <span className="tag is-primary is-light is-rounded">COP</span>
                   </div>
