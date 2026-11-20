@@ -75,9 +75,7 @@ export default function Productos({ busqueda = '', onLimpiar }) {
         )}
         {visibles.length > 0 && (
           <div className="has-text-centered mt-5">
-            <Link href="/categorias" className="button is-primary is-light is-rounded">
-              Explorar todo el catálogo →
-            </Link>
+           
           </div>
         )}
       </div>

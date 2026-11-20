@@ -13,9 +13,7 @@ export default function Categorias() {
           ))}
         </div>
         <div className="has-text-centered mt-5">
-          <Link href="/categorias" className="button is-primary is-rounded">
-            Ver todas las categorías
-          </Link>
+          
         </div>
       </div>
     </section>
